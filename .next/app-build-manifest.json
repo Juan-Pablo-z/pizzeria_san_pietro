@@ -1,0 +1,33 @@
+{
+  "pages": {
+    "/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/css/css-src_css_external_main_css-src_css_external_media_css-src_css_external_styles_css.css",
+      "static/chunks/app/page.js"
+    ],
+    "/layout": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/css/css-node_modules_react-toastify_dist_ReactToastify_css-src_css_general_animations_css-src_css-fd45fc.css",
+      "static/css/css-src_css_general_main_css.css",
+      "static/chunks/app/layout.js"
+    ],
+    "/(auth)/iniciar-sesion/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/(auth)/iniciar-sesion/page.js"
+    ],
+    "/plataforma/dashboard/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/plataforma/dashboard/page.js"
+    ],
+    "/plataforma/layout": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/css/css-src_css_platform_main_css-src_css_platform_media_css-src_css_platform_sidebar_css-src_css-e12355.css",
+      "static/chunks/app/plataforma/layout.js"
+    ]
+  }
+}
