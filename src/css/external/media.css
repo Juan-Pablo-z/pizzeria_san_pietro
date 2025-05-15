@@ -1,0 +1,144 @@
+/*? md */
+@media (min-width: 768px) {
+  .p-section {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+
+  header {
+    & nav {
+      display: block;
+    }
+  }
+
+  #start .p-section {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0px;
+
+    & .title-container {
+      gap: 32px;
+      grid-column: span 2 / span 2;
+
+      & h1 {
+        font-size: 48px;
+        font-weight: 900;
+        line-height: 48px;
+      }
+
+      & p {
+        font-size: 20px;
+        width: 420px;
+      }
+    }
+
+    & .separator-container {
+      display: none;
+    }
+
+    & .dish-container {
+      grid-column: span 1 / span 1;
+      max-width: 400px;
+    }
+  }
+
+  .dish-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+  }
+
+  #contact {
+    & .contact-info {
+      flex-direction: row;
+      justify-content: center;
+      gap: 64px;
+    }
+  }
+
+  .footer-info {
+    flex-direction: row !important;
+    justify-content: space-around;
+    gap: 24px;
+  }
+}
+
+/*? lg */
+@media (min-width: 1024px) {
+  .title {
+    font-size: 32px;
+    line-height: 32px;
+  }
+
+  .p-section {
+    padding-left: 32px;
+    padding-right: 32px;
+  }
+
+  #start {
+    & .title-container {
+      & h1 {
+        font-size: 72px;
+        font-weight: 900;
+        line-height: 72px;
+      }
+
+      & p {
+        font-size: 24px;
+        width: 500px;
+      }
+    }
+  }
+
+  #about > div {
+    margin-top: 48px;
+    grid-template-columns: repeat(3, 1fr);
+
+    & .img-container {
+      align-self: flex-start;
+    }
+    & img {
+      width: 320px;
+      height: 320px;
+      animation: pulse 5s infinite;
+    }
+
+    & ul {
+      grid-column: span 2 / span 2;
+    }
+  }
+
+  .dish-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 32px;
+  }
+
+  .footer-container {
+    flex-direction: row !important;
+
+    & .logo {
+      flex: 1;
+      align-items: flex-start;
+
+      & p {
+        text-align: start;
+        max-width: 400px;
+      }
+    }
+
+    & .footer-info {
+      flex: 2;
+      gap: 32px;
+
+      & > * {
+        flex: 1;
+      }
+    }
+  }
+}
+
+/*? xl */
+@media (min-width: 1280px) {
+  .dish-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}

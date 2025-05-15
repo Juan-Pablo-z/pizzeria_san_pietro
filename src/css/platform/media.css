@@ -1,0 +1,60 @@
+/* Media queries for responsive design */
+
+/*? sm */
+@media (min-width: 640px) {
+}
+
+/*? md */
+@media (min-width: 768px) {
+  .sidebar {
+    display: flex;
+    left: 0;
+  }
+
+  .main-container {
+    padding: 24px;
+  }
+
+  .provider-container.sb-expanded {
+    & main {
+      margin-left: 72px;
+      padding-top: 0px;
+    }
+
+    & .sidebar {
+      left: 0;
+    }
+  }
+
+  main {
+    margin-left: 260px;
+    padding-top: 0px;
+  }
+
+  .order-detail {
+    justify-content: space-between;
+    flex-direction: row;
+
+    & .subtitle {
+      gap: 8px;
+    }
+    
+    
+  }
+  
+}
+
+/*? lg */
+@media (min-width: 1024px) {
+  .main-container {
+    padding: 32px;
+  }
+}
+
+/*? xl */
+@media (min-width: 1280px) {
+}
+
+/*? 2xl */
+@media (min-width: 1536px) {
+}

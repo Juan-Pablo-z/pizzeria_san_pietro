@@ -1,0 +1,51 @@
+{
+  "name": "next-nextui-i18n-template",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@dnd-kit/core": "^6.1.0",
+    "@dnd-kit/sortable": "^8.0.0",
+    "@internationalized/date": "^3.5.6",
+    "@nextui-org/react": "^2.4.8",
+    "@react-aria/i18n": "^3.12.4",
+    "axios": "^1.7.7",
+    "bcrypt": "^5.1.1",
+    "clsx": "^2.1.1",
+    "framer-motion": "^11.0.28",
+    "i18next": "^23.11.1",
+    "i18next-resources-to-backend": "^1.2.1",
+    "next": "14.2.0",
+    "next-auth": "^5.0.0-beta.19",
+    "next-themes": "^0.3.0",
+    "pg": "^8.13.1",
+    "pusher": "^5.2.0",
+    "pusher-js": "^8.4.0-rc2",
+    "react": "^18",
+    "react-dom": "^18",
+    "react-hook-form": "^7.53.2",
+    "react-spring-bottom-sheet": "^3.5.0-alpha.0",
+    "react-toastify": "^10.0.6",
+    "zod": "^3.23.8",
+    "zustand": "^5.0.0-rc.2"
+  },
+  "devDependencies": {
+    "@egoist/tailwindcss-icons": "^1.7.4",
+    "@iconify/json": "^2.2.200",
+    "@types/bcrypt": "^5.0.2",
+    "@types/node": "^20",
+    "@types/pg": "^8.11.10",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "eslint": "^8",
+    "eslint-config-next": "14.2.0",
+    "postcss": "^8",
+    "tailwindcss": "^3.4.1",
+    "typescript": "^5"
+  }
+}

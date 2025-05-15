@@ -1,0 +1,116 @@
+/** Textos */
+
+.title {
+  font-size: 32px;
+  font-weight: bold;
+  line-height: 32px;
+}
+
+.subtitle {
+  font-size: 24px;
+  font-weight: 500;
+}
+
+.paragraph {
+  font-size: 16px;
+  font-weight: 400;
+}
+
+.text-primary {
+  color: var(--primary);
+}
+
+i {
+  font-size: 24px;
+  line-height: 24px;
+}
+
+.btn {
+  text-align: center;
+  height: 32px;
+  border-radius: var(--round);
+  font-weight: 600;
+  font-size: 16px;
+  transition: all 0.3s ease;
+  padding: 0 16px;
+}
+
+.btn.btn-icon {
+  display: flex;
+  width: 32px;
+  height: 32px;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+  & i {
+    color: #fff;
+    padding: 8px;
+  }
+}
+
+.btn:hover {
+  opacity: 0.8;
+}
+
+.btn.btn-black {
+  background: var(--black);
+  color: white;
+}
+
+.btn.btn-primary {
+  background: var(--primary);
+  color: var(--black);
+}
+
+.btn.btn-blue {
+  background: var(--blue);
+  color: var(--black);
+}
+
+.btn.btn-secondary {
+  background: var(--secondary);
+  color: white;
+}
+
+.btn.btn-danger {
+  background: var(--danger);
+  color: white;
+}
+
+.btn.btn-success {
+  background: var(--success);
+  color: white;
+}
+
+.btn.btn-disabled {
+  background: var(--gray);
+  color: white;
+}
+
+.btn.btn-light {
+  background: var(--light);
+  color: var(--black);
+}
+
+/* Insertar imagen a un div */
+
+.img-background {
+  background-size: cover;
+  background-attachment: fixed;
+  background-position: center;
+  position: relative;
+
+  & * {
+    z-index: 1;
+  }
+}
+
+.img-background::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+}

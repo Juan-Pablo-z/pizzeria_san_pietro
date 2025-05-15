@@ -1,0 +1,3 @@
+export const RESTAURANT_CONTACT = {
+  PHONE_NUMBER: "573152861376",
+};
