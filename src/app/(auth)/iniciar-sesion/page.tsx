@@ -12,17 +12,15 @@ export default function LoginPage() {
         }}
       >
         <div className="overflow-y-auto flex flex-wrap w-full h-dvh">
-          <div
-            className="lg:block hidden flex-1 overflow-hidden text-[40px] leading-[48px] text-default-600 lg:w-1/2"
-          >
+          <div className="lg:block hidden flex-1 overflow-hidden text-[40px] leading-[48px] text-default-600 lg:w-1/2">
             <div className="flex justify-center items-center min-h-screen">
               <Link href="/" className="animate__fade-in-left animate__pulse">
                 <Image
-                  src="/images/yuli-logo.png"
-                  alt="Logo Restaurante Yuli"
+                  src="/images/san_pietro_logo.png"
+                  alt="Logo san pietro"
                   width={400}
                   height={400}
-                  className="mb-10 h-64 w-64"
+                  className="mb-10 h-64 w-64 rounded-full"
                 />
               </Link>
             </div>
@@ -31,8 +29,8 @@ export default function LoginPage() {
             <LoginForm />
           </div>
           <div className="absolute bottom-0 lg:block hidden text-white py-5 px-5 text-xl w-full">
-            Ingresa a la plataforma{" "}
-            <span className="text-white font-bold ms-1">Restaurante Yuli</span>
+            Ingresa a la plataforma {" "}
+            <span className="text-white font-bold ms-1">Pizzeria San Pietro</span>
           </div>
         </div>
       </div>

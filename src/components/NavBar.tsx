@@ -90,8 +90,9 @@ export const NavBar = () => {
         <Image
           width={48}
           height={48}
-          src="/images/yuli-logo.png"
-          alt="Logo Yuli"
+          src="/images/san_pietro_logo.png"
+          alt="Logo san pietro"
+          className="rounded-full"
         />
       </NavbarContent>
 

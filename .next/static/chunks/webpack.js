@@ -192,7 +192,7 @@
 /******/ 	
 /******/ 	/* webpack/runtime/getFullHash */
 /******/ 	!function() {
-/******/ 		__webpack_require__.h = function() { return "cb6f4ba63569751d"; }
+/******/ 		__webpack_require__.h = function() { return "141ca2b8241c41ad"; }
 /******/ 	}();
 /******/ 	
 /******/ 	/* webpack/runtime/global */
@@ -845,7 +845,7 @@
 /******/ 					if(installedChunkData) {
 /******/ 						promises.push(installedChunkData[2]);
 /******/ 					} else {
-/******/ 						if(/^(app(\/(p(lataforma\/(dashboard\/page|layout)|age)|\(auth\)\/iniciar\-sesion\/page|layout)|\-pages\-internals)|main\-app)$/.test(chunkId)) {
+/******/ 						if(/^(app(\/(p(lataforma\/(dashboard\/page|layout)|age)|\(auth\)\/iniciar\-sesion\/page|layout)|\-pages\-internals)|main(|\-app)|pages\/_(app|error)|react\-refresh)$/.test(chunkId)) {
 /******/ 							// setup Promise in chunk cache
 /******/ 							var promise = new Promise(function(resolve, reject) { installedChunkData = installedChunks[chunkId] = [resolve, reject]; });
 /******/ 							promises.push(installedChunkData[2] = promise);

@@ -6,13 +6,12 @@ import { Recargo } from "@/interfaces";
 import "@/css/external/main.css";
 import Link from "next/link";
 import { getProducts } from "@/actions/products.actions";
-import { Button, Card, CardBody } from "@nextui-org/react";
+import { Button, Divider, Card, CardBody } from "@nextui-org/react";
 import { ContactForm } from "@/components";
 
 const NAVIGATE = [
   { name: "Inicio", href: "#" },
   { name: "Sobre Nosotros", href: "#about" },
-  { name: "Menú", href: "#menu" },
   { name: "Contacto", href: "#contact" },
 ];
 
@@ -21,7 +20,7 @@ const RESTAURANT_INFO = [
     icon: "i-mdi-location-radius-outline",
     title: "Nuestra Ubicación",
     description:
-      "Somos un restaurante en la central de transporte en funcionamiento desde el año 2023 en la ciudad de Cúcuta, Norte de Santander.",
+      "Somos un restaurante en el barrio Zulima, que se encuentra en funcionamiento desde el año 2015 en la ciudad de Cúcuta, Norte de Santander",
   },
   {
     icon: "i-ion-restaurant-outline",
@@ -52,13 +51,13 @@ const RESTAURANT_INFO = [
 const CONTACT_INFO = [
   { icon: "i-mdi-phone-outline", text: "+57 315 2861376" },
   { icon: "i-mdi-email-outline", text: "yuli@contacto.com" },
-  { icon: "i-mdi-location-outline", text: "Central de transportes, Cúcuta" },
+  { icon: "i-mdi-location-outline", text: "Barrio Zulima, Cúcuta" },
 ];
 
 export const metadata: Metadata = {
-  title: "Restaurante Yuli",
+  title: "Pizzeria San Pietro",
   description:
-    "Restaurante Yuli, un rincón para disfrutar comida de calidad en la terminal de transportes de Cúcuta",
+    "Pizzeria San Pietro, un rincón para disfrutar comida de calidad en el barrio Zulima de Cúcuta",
 };
 
 export default async function Home() {
@@ -73,10 +72,11 @@ export default async function Home() {
       {/* Header y menú */}
       <header className="p-section">
         <Image
+          className="rounded-full"
           width={64}
           height={64}
-          src="/images/yuli-logo.png"
-          alt="Logo de yuli"
+          src="/images/san_pietro_logo.png"
+          alt="logo san pietro"
         />
         <nav>
           <ul>
@@ -88,26 +88,21 @@ export default async function Home() {
           </ul>
         </nav>
         <Button className="btn btn-primary">
-          <Link href="/iniciar-sesion">Iniciar sesión</Link>
+          <Link className="text-white" href="/iniciar-sesion">Iniciar sesión</Link>
         </Button>
       </header>
       {/* Inicio */}
-      <section className="img-background" id="start">
+      <section className="img-background md:h-[30rem] lg:h-[30rem]" id="start">
         <div className="p-section">
           <div className="title-container">
             <h1>
               Bienvenidos a <br />
-              Restaurante Yuli
+              Pizzeria San Pietro
             </h1>
             <p>
               Un rincón para disfrutar comida de calidad en la terminal de
               transportes de Cúcuta
             </p>
-            <div>
-              <Button className="btn btn-primary">
-                <Link href="#menu">Explora nuestro menú</Link>
-              </Button>
-            </div>
           </div>
           <div className="separator-container">
             <i className="i-fluent-food-grains-20-regular"></i>
@@ -116,20 +111,22 @@ export default async function Home() {
           </div>
         </div>
       </section>
+
       {/* Sobre nosotros */}
       <section id="about" className="p-section">
         <h2 className="title">Sobre nosotros</h2>
         <div>
           <div className="img-container">
-          <Image
-           width={160}
-           height={160}
-          src="/images/yuli-logo.png"
-          alt="Logo de yuli"
-        />
+            <Image
+              className="rounded-full"
+              width={160}
+              height={160}
+              src="/images/san_pietro_logo.png"
+              alt="logo san pietro"
+            />
             <p>
-              Restaurante Yuli es un lugar donde podrás disfrutar de una
-              deliciosa comida casera y platos especiales del día.
+              Pizzeria San Pietro es un lugar donde podrás disfrutar de una
+              deliciosa comida y platos especiales del día.
             </p>
           </div>
           <ul>
@@ -147,8 +144,11 @@ export default async function Home() {
           </ul>
         </div>
       </section>
+      <div className="pt-4 pl-8 pr-8">
+      <Divider className="my-4" />
+      </div>
       {/* Menú */}
-      <section id="menu" className="p-section">
+      {/* <section id="menu" className="p-section">
         <h2 className="title">Nuestro menú</h2>
         <div className="dish-grid mt-8">
           {products.map((p) => (
@@ -172,7 +172,7 @@ export default async function Home() {
             </Card>
           ))}
         </div>
-      </section>
+      </section> */}
 
       {/* Contacto */}
       <section id="contact" className="p-section">
@@ -195,14 +195,15 @@ export default async function Home() {
         <div className="footer-container">
           <div className="logo">
             <Image
+              className="rounded-full"
               width={160}
               height={160}
-              src="/images/yuli-logo.png"
-              alt="Logo de Restaurante Yuli"
+              src="/images/san_pietro_logo.png"
+              alt="Logo de Pizzeria San Pietro"
             />
             <p className="paragraph">
-              Somos un restaurante en la central de transporte, que se encuentra
-              en funcionamiento desde el año 2023 en la ciudad de Cúcuta, Norte
+              Somos un restaurante en el barrio Zulima, que se encuentra
+              en funcionamiento desde el año 2015 en la ciudad de Cúcuta, Norte
               de Santander.
             </p>
           </div>
@@ -230,8 +231,8 @@ export default async function Home() {
         </div>
       </footer>
       <div className="copyright">
-        <div className="p-section">
-          Copyright © 2024 - Todos los derechos reservados
+        <div className="p-section text-white">
+          Copyright © 2025 - Todos los derechos reservados
         </div>
       </div>
     </>

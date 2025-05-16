@@ -89,8 +89,9 @@ export const Sidebar: React.FC<Props> = ({ user }) => {
         <Image
           width={100}
           height={100}
-          src="/images/yuli-logo.png"
-          alt="Logo Yuli"
+          src="/images/san_pietro_logo.png"
+          className="rounded-full"
+          alt="Logo san pietro"
         />
         <h4 className="subtitle">{nom_user}</h4>
         <p className="paragraph">{dcar}</p>
