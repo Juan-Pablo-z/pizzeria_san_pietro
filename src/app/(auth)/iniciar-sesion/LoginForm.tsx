@@ -66,8 +66,8 @@ export const LoginForm = () => {
       </CardHeader>
       <CardBody className="flex flex-col gap-4">
         <div className="text-default-500  text-base">
-          Ingresa a la plataforma del{" "}
-          <span className="text-default-600 font-bold">Restaurante Yuli</span>
+          Ingresa a la plataforma de la {" "}
+          <span className="text-default-600 font-bold">Pizzeria San Pietro</span>
         </div>
         <Divider />
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
@@ -97,6 +97,7 @@ export const LoginForm = () => {
           <Button
             type="submit"
             className="btn btn-primary"
+            style={{ color: 'white' }}
             disabled={isLoading}
           >
             {isLoading ? "Cargando..." : "Iniciar sesión"}
