@@ -26,31 +26,31 @@ const RESTAURANT_INFO = [
     icon: "i-ion-restaurant-outline",
     title: "¿Qué Ofrecemos?",
     description:
-      "Estamos dedicados a la preparación de alimentos como desayunos y almuerzos, buscando siempre deleitar el paladar de nuestros clientes.",
+      "En San Pietro nos apasiona el sabor italiano. Preparamos pizzas artesanales con ingredientes frescos y recetas tradicionales, en un ambiente familiar y acogedor para disfrutar momentos especiales.",
   },
   {
     icon: "i-mdi-star-outline",
-    title: "Calidad Garantizada",
+    title: "Visión",
     description:
-      "Utilizamos ingredientes de primera calidad en nuestros platos corrientes y especiales del día.",
+      "Ser la pizzería preferida en la región, reconocida por su sabor, atención al cliente e innovación, manteniendo nuestra esencia artesanal y compromiso con la calidad y la comunidad.",
   },
   {
     icon: "i-mdi-handshake-outline",
-    title: "Nuestro Compromiso",
+    title: "Misión",
     description:
-      "Ofrecemos un excelente servicio al cliente, enfocado en conductores y pasajeros que se encuentran dentro de la central de transporte.",
+      "En San Pietro, buscamos deleitar con pizzas artesanales de calidad, usando ingredientes frescos y locales, brindando un servicio cálido y un ambiente acogedor para compartir en familia y con amigos.",
   },
   {
     icon: "i-mdi-hand-heart-outline",
     title: "Te Esperamos",
     description:
-      "¡No pierdas la oportunidad! ¿Qué esperas para probar nuestros platos?",
+      "¡Visítanos y disfruta de la mejor pizza artesanal! San Pietro, sabor que reúne.",
   },
 ];
 
 const CONTACT_INFO = [
   { icon: "i-mdi-phone-outline", text: "+57 315 2861376" },
-  { icon: "i-mdi-email-outline", text: "yuli@contacto.com" },
+  { icon: "i-mdi-email-outline", text: "SanPietroContacto.com" },
   { icon: "i-mdi-location-outline", text: "Barrio Zulima, Cúcuta" },
 ];
 
@@ -173,7 +173,6 @@ export default async function Home() {
           ))}
         </div>
       </section> */}
-
       {/* Contacto */}
       <section id="contact" className="p-section">
         <h2 className="title">Contacto</h2>
