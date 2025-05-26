@@ -13,7 +13,7 @@ const inter = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: "Restaurante Yuli",
+  title: "Pizzeria San Pietro",
 };
 
 interface Props {
