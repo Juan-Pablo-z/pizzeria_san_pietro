@@ -19,7 +19,7 @@ import { usePathname } from "next/navigation";
 import { Cargos } from "@/enum/cargos.enum";
 
 interface Props {}
- 
+
 const MENU_ITEMS = [
   {
     icon: "i-mdi-view-dashboard",
@@ -29,19 +29,19 @@ const MENU_ITEMS = [
   },
   {
     icon: "i-mdi-users-group",
-    name: "Usuarios",
+    name: "Empleados",
     href: "/plataforma/usuarios",
     roles: [Cargos.ADMIN],
   },
-  {
+  /*{
     icon: "i-ep-dish",
     name: "Productos",
     href: "/plataforma/productos",
     roles: [Cargos.ADMIN],
-  },
+  },*/
   {
     icon: "i-mdi-file-document-plus-outline",
-    name: "Tomar pedido",
+    name: "Nueva tarea",
     href: "/plataforma/tomar-pedido",
     roles: [Cargos.ADMIN, Cargos.MESERA],
   },
@@ -51,24 +51,24 @@ const MENU_ITEMS = [
     href: "/plataforma/reportes",
     roles: [Cargos.ADMIN],
   },
-  {
+  /*{
     icon: "i-mdi-oven",
     name: "Cocina",
     href: "/plataforma/cocina",
     roles: [Cargos.ADMIN, Cargos.COCINERA_JEFE, Cargos.COCINERA],
-  },
+  },*/
   {
     icon: "i-mdi-clipboard-text-clock-outline",
-    name: "Pedidos",
+    name: "Tareas",
     href: "/plataforma/pedidos",
     roles: [Cargos.ADMIN],
   },
-  {
+  /*{
     icon: "i-mdi-cash-register",
     name: "Caja",
     href: "/plataforma/caja",
     roles: [Cargos.ADMIN],
-  },
+  },*/
 ];
 
 export const NavBar = () => {
