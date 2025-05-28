@@ -18,24 +18,24 @@ const UserManager: React.FC<Props> = ({ users: initialUsers }) => {
   const handleDeleteUser = async (cedUser: string) => {
     try {
       await deleteUser(cedUser);
-      toast.success("Usuario eliminado correctamente");
+      toast.success("Empleado eliminado correctamente");
       setUsers((prevUsers) => prevUsers.filter((u) => u.ced_user !== cedUser));
     } catch (error) {
-      toast.error("Error al eliminar el usuario");
+      toast.error("Error al eliminar el empleado");
     }
   };
 
   return (
     <div className="main-container">
-      <h1 className="title">Gestión de Usuarios</h1>
+      <h1 className="title">Gestión de Empleados</h1>
       <div className="mt-4 flex flex-col gap-3">
         <div className="grid">
           <Link href={"/plataforma/usuarios/crear"}>
-            <Button className="btn btn-black">Crear usuario</Button>
+            <Button className="bg-dark text-white hover:bg-green-800">Crear empleado</Button>
           </Link>
         </div>
         <CustomTable
-          emptyMessage="No hay usuarios registrados"
+          emptyMessage="No hay empleados registrados"
           columns={[
             { header: "Cedula", accessor: "ced_user", type: "text" },
             { header: "Nombre", accessor: "nom_user", type: "text" },

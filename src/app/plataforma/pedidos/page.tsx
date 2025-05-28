@@ -43,7 +43,7 @@ export default async function NamePage({ searchParams }: Props) {
 
   return (
     <div className="main-container">
-      <h1 className="title mb-4">Listado de pedidos</h1>
+      <h1 className="title mb-4">Lista de Tareas</h1>
       <PedidosManager
         pedidos={data}
         totalPages={totalPages}
