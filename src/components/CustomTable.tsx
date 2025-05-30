@@ -80,6 +80,7 @@ export const CustomTable: React.FC<Props> = ({
   return (
     <div>
       <Table
+        isStriped 
         bottomContent={footerComponent}
         aria-label="Custom table"
         {...props}
