@@ -80,7 +80,7 @@ export const PedidosManager: React.FC<Props> = ({
               size="md"
               className="md:w-48"
               startContent={<i className="i-mdi-user" />}
-              label="Filtar por tipo de cliente"
+              label="tipo de empleado"
               selectedKeys={new Set([filters.fktc_fac || "all"])}
               onSelectionChange={(values) =>
                 handleFilterChange("fktc_fac", values.currentKey || "")
