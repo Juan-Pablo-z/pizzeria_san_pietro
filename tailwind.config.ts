@@ -23,7 +23,7 @@ const config: Config = {
       colors: {
         blue: "#1b76cf",
         secondary: "#e51510",
-        primary: "#fcc300",
+        primary: "#02943f",
         success: "#4caf50",
         gray: "#999999",
         danger: "#f44336",

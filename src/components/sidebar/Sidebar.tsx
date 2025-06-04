@@ -55,6 +55,12 @@ const MENU_ITEMS = [
     href: "/plataforma/pedidos",
     roles: [Cargos.ADMIN],
   },
+    {
+    icon: "i-mdi-clipboard-text-clock-outline",
+    name: "Tareas",
+    href: "/plataforma/lista-tareas",
+    roles: [Cargos.ADMIN],
+  },
   /*{
     icon: "i-mdi-cash-register",
     name: "Caja",
