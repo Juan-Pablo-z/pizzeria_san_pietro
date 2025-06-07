@@ -1,39 +1,74 @@
 "use client";
 
 import { useDroppable } from "@dnd-kit/core";
+import { motion } from "framer-motion";
 import { Card, CardHeader, CardBody } from "@heroui/card";
 import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import { CardTarea } from "./CardTarea";
+import "../css/estilos.css"; // si estás en components/
+
+
+
 
 interface Tarea {
-id: string;
-title: string;
-content: string;
+  id: string;
+  title: string;
+  content: string;
 }
 
 interface Props {
-id: string;
-titulo: string;
-tareas: Tarea[];
-claseFondo: string;
-claseAnimacion: string;
+  id: string;
+  titulo: string;
+  tareas: Tarea[];
+  claseFondo: string;
+  claseAnimacion: string;
+  onEdit: (tareaId: string) => void;
+  onDelete: (tareaId: string) => void;
 }
 
-export const ColumnaTareas = ({ id, titulo, tareas, claseFondo, claseAnimacion }: Props) => {
-const { setNodeRef } = useDroppable({ id });
+export const ColumnaTareas = ({
+  id,
+  titulo,
+  tareas,
+  claseFondo,
+  claseAnimacion,
+  onEdit,
+  onDelete,
+}: Props) => {
+  const { setNodeRef, isOver } = useDroppable({ id });
 
-return (
-    <Card ref={setNodeRef} id={id} className={`w-auto h-auto ${claseAnimacion}`}>
-    <CardHeader className={`flex flex-col items-center text-white ${claseFondo}`}>
-        <h2 className="text-lg font-semibold text-center capitalize">{titulo}</h2>
-    </CardHeader>
-    <CardBody className="flex flex-col items-center gap-2 p-4 min-h-[100px]">
-        <SortableContext items={tareas.map((t) => t.id)} strategy={verticalListSortingStrategy}>
-        {tareas.map((t) => (
-            <CardTarea key={t.id} id={t.id} title={t.title} content={t.content} />
-        ))}
-        </SortableContext>
-    </CardBody>
-    </Card>
-);
+  return (
+    <motion.div
+      ref={setNodeRef}
+      layout
+      initial={{ opacity: 0, y: 20, scale: 0.98 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      whileHover={{ scale: 1.01 }}
+      transition={{ type: "spring", stiffness: 200, damping: 20 }}
+      className={`transition-shadow ${isOver ? "shadow-2xl scale-[1.01]" : ""}`}
+    >
+      <Card className={`w-auto h-auto ${claseAnimacion}`}>
+        <CardHeader className={`flex flex-col items-center text-white ${claseFondo}`}>
+          <h2 className="text-lg font-semibold text-center capitalize">
+            {titulo}
+          </h2>
+        </CardHeader>
+        <CardBody className="flex flex-col gap-4 p-4">
+          <SortableContext items={tareas.map((t) => t.id)} strategy={verticalListSortingStrategy}>
+            {tareas.map((t) => (
+              <CardTarea
+                key={t.id}
+                id={t.id}
+                title={t.title}
+                content={t.content}
+                onEdit={() => onEdit(t.id)}
+                onDelete={() => onDelete(t.id)}
+              />
+            ))}
+          </SortableContext>
+        </CardBody>
+      </Card>
+    </motion.div>
+  );
 };
+
