@@ -5,11 +5,13 @@ import { CSS } from "@dnd-kit/utilities";
 import { motion } from "framer-motion";
 import { Card, CardHeader, CardBody } from "@heroui/card";
 import { Button } from "@heroui/react";
+import { Tooltip } from "@heroui/tooltip";
 
 interface CardTareaProps {
   id: string;
   title: string;
   content: string;
+  name: string;
   onEdit?: () => void;
   onDelete?: () => void;
 }
@@ -18,6 +20,7 @@ export const CardTarea: React.FC<CardTareaProps> = ({
   id,
   title,
   content,
+  name,
   onEdit,
   onDelete,
 }) => {
@@ -57,7 +60,6 @@ export const CardTarea: React.FC<CardTareaProps> = ({
     >
       {/* Botones flotantes */}
       <div className="absolute bottom-2 right-2 hidden group-hover:flex gap-1 z-10">
-
         <Button
           isIconOnly
           size="sm"
@@ -78,15 +80,19 @@ export const CardTarea: React.FC<CardTareaProps> = ({
         </Button>
       </div>
 
-<Card className="w-full shadow-md card-tarea-personalizada">
-  <CardHeader className="bg-black text-white rounded-t-md px-4 py-2">
-    <h2 className="text-lg font-semibold">{title}</h2>
-  </CardHeader> 
-  <CardBody>
-    <span>{content}</span>
-  </CardBody>
-</Card>
-
+      <Card className="w-full shadow-md card-tarea-personalizada">
+        <CardHeader className="bg-black text-white px-4 py-2 flex items-center gap-3 rounded-t-lg">
+          <Tooltip content={name}>
+            <div className="w-8 h-8 bg-green-600 rounded-full flex items-center justify-center text-white font-bold text-sm">
+              {name}
+            </div>
+          </Tooltip>
+          <h2 className="text-lg font-semibold">{title}</h2>
+        </CardHeader>
+        <CardBody>
+          <span>{content}</span>
+        </CardBody>
+      </Card>
     </motion.div>
   );
 };

@@ -10,6 +10,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { ModalConfirmarEliminacion } from "./components/ModalConfirmarEliminacion";
 import { toast } from "react-toastify";
 import "./css/estilos.css";
+import { Divider } from "@heroui/react";
 
 
 
@@ -19,14 +20,15 @@ interface Tarea {
   id: string;
   title: string;
   content: string;
+  name: string;
 }
 
 type ColumnasTareas = Record<EstadoTarea, Tarea[]>;
 
 const initialTareas: ColumnasTareas = {
-  pendientes: [{ id: "1", title: "Tarea 1", content: "Contenido de la tarea 1" }],
-  enProceso: [{ id: "2", title: "Tarea 2", content: "Contenido de la tarea 2" }],
-  terminadas: [{ id: "3", title: "Tarea 3", content: "Contenido de la tarea 3" }],
+  pendientes: [{ id: "1", title: "Tarea 1", content: "Contenido de la tarea 1", name:"JP" }],
+  enProceso: [{ id: "2", title: "Tarea 2", content: "Contenido de la tarea 2", name:"AN" }],
+  terminadas: [{ id: "3", title: "Tarea 3", content: "Contenido de la tarea 3", name:"SF" }],
 };
 
 const claseFondo: Record<EstadoTarea, string> = {
@@ -39,6 +41,12 @@ const claseAnimacion: Record<EstadoTarea, string> = {
   pendientes: "card-animada-pendientes",
   enProceso: "card-animada-proceso",
   terminadas: "card-animada-terminadas",
+};
+
+const claseDivider: Record<EstadoTarea, string> = {
+  pendientes: "secondary",
+  enProceso: "dark",
+  terminadas: "primary",
 };
 
 export default function ListaTareasPage() {
@@ -136,6 +144,7 @@ const [tareaAEliminar, setTareaAEliminar] = useState<{ columna: EstadoTarea; id:
   return (
     <div className="main-container">
       <h1 className="title mb-4">Lista de Tareas</h1>
+      <Divider className="my-4" />
       <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {(Object.entries(columns) as [EstadoTarea, Tarea[]][]).map(([columnaId, tareas]) => (
@@ -150,6 +159,7 @@ const [tareaAEliminar, setTareaAEliminar] = useState<{ columna: EstadoTarea; id:
               tareas={tareas}
               claseFondo={claseFondo[columnaId]}
               claseAnimacion={claseAnimacion[columnaId]}
+              claseDivider={claseDivider[columnaId]}
               onEdit={(tareaId) => handleEditarTarea(columnaId, tareaId)}
               onDelete={(tareaId) => handleEliminarTarea(columnaId, tareaId)}
             />

@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { Card, CardHeader, CardBody } from "@heroui/card";
 import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import { CardTarea } from "./CardTarea";
+import {Divider} from "@heroui/divider";
 import "../css/estilos.css"; // si estás en components/
 
 
@@ -14,6 +15,7 @@ interface Tarea {
   id: string;
   title: string;
   content: string;
+  name: string;
 }
 
 interface Props {
@@ -22,6 +24,7 @@ interface Props {
   tareas: Tarea[];
   claseFondo: string;
   claseAnimacion: string;
+  claseDivider: string;
   onEdit: (tareaId: string) => void;
   onDelete: (tareaId: string) => void;
 }
@@ -32,6 +35,7 @@ export const ColumnaTareas = ({
   tareas,
   claseFondo,
   claseAnimacion,
+  claseDivider,
   onEdit,
   onDelete,
 }: Props) => {
@@ -53,6 +57,7 @@ export const ColumnaTareas = ({
             {titulo}
           </h2>
         </CardHeader>
+        <Divider className={`bg-${claseDivider}`}/>
         <CardBody className="flex flex-col gap-4 p-4">
           <SortableContext items={tareas.map((t) => t.id)} strategy={verticalListSortingStrategy}>
             {tareas.map((t) => (
@@ -61,6 +66,7 @@ export const ColumnaTareas = ({
                 id={t.id}
                 title={t.title}
                 content={t.content}
+                name={t.name}
                 onEdit={() => onEdit(t.id)}
                 onDelete={() => onDelete(t.id)}
               />
