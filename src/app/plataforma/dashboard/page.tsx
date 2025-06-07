@@ -3,24 +3,12 @@ import { Card, CardBody, cn, Divider } from "@nextui-org/react";
 import Link from "next/link";
 
 const MENU_ITEMS = [
-  // {
-  //   icon: "i-mdi-view-dashboard",
-  //   name: "Dashboard",
-  //   href: "/plataforma/dashboard",
-  //   roles: [Cargos.ADMIN],
-  // },
   {
     icon: "i-mdi-users-group",
     name: "Empleados",
     href: "/plataforma/usuarios",
     roles: [Cargos.ADMIN],
   },
-  /*{
-    icon: "i-ep-dish",
-    name: "Productos",
-    href: "/plataforma/productos",
-    roles: [Cargos.ADMIN],
-  },*/
   {
     icon: "i-mdi-file-document-plus-outline",
     name: "Nueva tarea",
@@ -33,24 +21,12 @@ const MENU_ITEMS = [
     href: "/plataforma/reportes",
     roles: [Cargos.ADMIN],
   },
-  /*{
-    icon: "i-mdi-oven",
-    name: "Cocina",
-    href: "/plataforma/cocina",
-    roles: [Cargos.ADMIN, Cargos.COCINERA_JEFE, Cargos.COCINERA],
-  },*/
   {
     icon: "i-mdi-clipboard-text-clock-outline",
     name: "Tareas",
-    href: "/plataforma/pedidos",
-    roles: [Cargos.ADMIN],
+    href: "/plataforma/lista-tareas",
+    roles: [Cargos.ADMIN, Cargos.COCINERA_JEFE, Cargos.COCINERA, Cargos.MESERA],
   },
-  /*{
-    icon: "i-mdi-cash-register",
-    name: "Caja",
-    href: "/plataforma/caja",
-    roles: [Cargos.ADMIN],
-  },*/
 ];
 
 export default function DashboardPage() {
