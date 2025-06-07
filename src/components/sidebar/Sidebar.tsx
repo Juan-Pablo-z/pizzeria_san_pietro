@@ -25,17 +25,11 @@ const MENU_ITEMS = [
     href: "/plataforma/usuarios",
     roles: [Cargos.ADMIN],
   },
-  /*{
-    icon: "i-ep-dish",
-    name: "Productos",
-    href: "/plataforma/productos",
-    roles: [Cargos.ADMIN],
-  },*/
   {
     icon: "i-mdi-file-document-plus-outline",
     name: "Nueva tarea",
     href: "/plataforma/tomar-pedido",
-    roles: [Cargos.ADMIN, Cargos.MESERA],
+    roles: [Cargos.ADMIN],
   },
   {
     icon: "i-mdi-file-chart-outline",
@@ -43,30 +37,12 @@ const MENU_ITEMS = [
     href: "/plataforma/reportes",
     roles: [Cargos.ADMIN],
   },
-  /*{
-    icon: "i-mdi-oven",
-    name: "Cocina",
-    href: "/plataforma/cocina",
-    roles: [Cargos.ADMIN, Cargos.COCINERA_JEFE, Cargos.COCINERA],
-  },*/
   {
     icon: "i-mdi-clipboard-text-clock-outline",
     name: "Tareas",
-    href: "/plataforma/pedidos",
-    roles: [Cargos.ADMIN],
-  },
-    {
-    icon: "i-mdi-clipboard-text-clock-outline",
-    name: "Tareas",
     href: "/plataforma/lista-tareas",
-    roles: [Cargos.ADMIN],
+    roles: [Cargos.ADMIN, Cargos.COCINERA_JEFE, Cargos.COCINERA, Cargos.MESERA],
   },
-  /*{
-    icon: "i-mdi-cash-register",
-    name: "Caja",
-    href: "/plataforma/caja",
-    roles: [Cargos.ADMIN],
-  },*/
 ];
 
 interface Props {
@@ -84,8 +60,8 @@ export const Sidebar: React.FC<Props> = ({ user }) => {
   return (
     <nav className="sidebar">
       <div className="top-menu">
-        <button>
-          <i className="settings-button i-mdi-settings"></i>
+        <button className="cursor-default" disabled>
+          <i className="i-mdi-pizza"></i>
         </button>
         <button onClick={toggleSidebar}>
           <i className="i-mdi-hamburger-menu"></i>
