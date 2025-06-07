@@ -1,27 +1,3 @@
-.card-animada-pendientes {
-  transition: box-shadow 500ms ease-out 260ms;
-}
-
-.card-animada-pendientes:hover {
-  box-shadow: 0px 0px 10px 0px rgba(244, 67, 54, 0.75);
-}
-
-.card-animada-proceso {
-  transition: box-shadow 500ms ease-out 260ms;
-}
-
-.card-animada-proceso:hover {
-  box-shadow: 0px 0px 10px 0px rgba(43,43,43, 0.75);
-}
-
-.card-animada-terminadas {
-  transition: box-shadow 500ms ease-out 260ms;
-}
-
-.card-animada-terminadas:hover {
-  box-shadow: 0px 0px 10px 0px rgba(0,201,20, 0.75);
-}
-
 .header-tablero-pendientes {
   background-color: #de2929;
   color: white;
