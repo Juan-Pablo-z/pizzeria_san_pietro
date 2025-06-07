@@ -1,0 +1,22 @@
+/* Estilo para el fondo */
+.bg-gradient-italian {
+  background-image: linear-gradient(135deg, #047b34, #272727, #af0710); /* Colores para el gradiente o transicion */
+}
+
+/* Animación para el gradiente */
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.animate-gradient {
+  background-size: 400% 400%;
+  animation: gradient 15s ease infinite;
+}
