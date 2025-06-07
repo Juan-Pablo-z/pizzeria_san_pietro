@@ -21,3 +21,18 @@
 .card-animada-terminadas:hover {
   box-shadow: 0px 0px 10px 0px rgba(0,201,20, 0.75);
 }
+
+.header-tablero-pendientes {
+  background-color: #de2929;
+  color: white;
+}
+
+.header-tablero-enProceso {
+  background-color: #434242;
+  color: white;
+}
+
+.header-tablero-terminadas {
+  background-color: #058412;
+  color: white;
+}

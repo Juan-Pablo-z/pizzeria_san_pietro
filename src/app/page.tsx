@@ -50,7 +50,7 @@ const RESTAURANT_INFO = [
 
 const CONTACT_INFO = [
   { icon: "i-mdi-phone-outline", text: "+57 315 2861376" },
-  { icon: "i-mdi-email-outline", text: "SanPietroContacto.com" },
+  { icon: "i-mdi-email-outline", text: "sanpietropizzeria9@gmail.com" },
   { icon: "i-mdi-location-outline", text: "Barrio Zulima, Cúcuta" },
 ];
 
