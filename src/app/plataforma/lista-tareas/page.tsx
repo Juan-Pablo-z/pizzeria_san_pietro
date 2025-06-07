@@ -2,9 +2,16 @@
 
 import { useState } from "react";
 import { DndContext, closestCenter } from "@dnd-kit/core";
-import { ColumnaTareas } from "./components/ColumnaTareas";
 import { arrayMove } from "@dnd-kit/sortable";
+import { ColumnaTareas } from "./components/ColumnaTareas";
+import { ModalEditarTarea } from "./components/ModalEditarTarea";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { ModalConfirmarEliminacion } from "./components/ModalConfirmarEliminacion";
+import { toast } from "react-toastify";
 import "./css/estilos.css";
+
+
 
 type EstadoTarea = "pendientes" | "enProceso" | "terminadas";
 
@@ -36,6 +43,9 @@ const claseAnimacion: Record<EstadoTarea, string> = {
 
 export default function ListaTareasPage() {
   const [columns, setColumns] = useState<ColumnasTareas>(initialTareas);
+  const [modalAbierto, setModalAbierto] = useState(false);
+  const [tareaEditando, setTareaEditando] = useState<Tarea | null>(null);
+  const [columnaEditando, setColumnaEditando] = useState<EstadoTarea | null>(null);
 
   const handleDragEnd = ({ active, over }: any) => {
     if (!over) return;
@@ -74,6 +84,55 @@ export default function ListaTareasPage() {
     }
   };
 
+const handleEliminarTarea = (columna: EstadoTarea, tareaId: string) => {
+  setTareaAEliminar({ columna, id: tareaId });
+  setModalEliminarAbierto(true);
+};
+
+const [modalEliminarAbierto, setModalEliminarAbierto] = useState(false);
+const [tareaAEliminar, setTareaAEliminar] = useState<{ columna: EstadoTarea; id: string } | null>(null);
+
+
+  const handleEditarTarea = (columna: EstadoTarea, tareaId: string) => {
+    const tarea = columns[columna].find((t) => t.id === tareaId);
+    if (!tarea) return;
+    setTareaEditando(tarea);
+    setColumnaEditando(columna);
+    setModalAbierto(true);
+  };
+
+  const confirmarEliminacion = () => {
+  if (!tareaAEliminar) return;
+
+  const { columna, id } = tareaAEliminar;
+
+  setColumns((prev) => ({
+    ...prev,
+    [columna]: prev[columna].filter((t) => t.id !== id),
+  }));
+
+  setModalEliminarAbierto(false);
+  setTareaAEliminar(null);
+
+  toast.success("Tarea eliminada correctamente");
+};
+
+
+  const guardarCambiosTarea = (nuevoTitulo: string, nuevoContenido: string) => {
+    if (!tareaEditando || !columnaEditando) return;
+
+    setColumns((prev) => ({
+      ...prev,
+      [columnaEditando]: prev[columnaEditando].map((t) =>
+        t.id === tareaEditando.id ? { ...t, title: nuevoTitulo, content: nuevoContenido } : t
+      ),
+    }));
+
+    setModalAbierto(false);
+    setTareaEditando(null);
+    setColumnaEditando(null);
+  };
+
   return (
     <div className="main-container">
       <h1 className="title mb-4">Lista de Tareas</h1>
@@ -91,10 +150,29 @@ export default function ListaTareasPage() {
               tareas={tareas}
               claseFondo={claseFondo[columnaId]}
               claseAnimacion={claseAnimacion[columnaId]}
+              onEdit={(tareaId) => handleEditarTarea(columnaId, tareaId)}
+              onDelete={(tareaId) => handleEliminarTarea(columnaId, tareaId)}
             />
           ))}
         </div>
       </DndContext>
+
+
+      <ModalConfirmarEliminacion
+  isOpen={modalEliminarAbierto}
+  onClose={() => setModalEliminarAbierto(false)}
+  onConfirm={confirmarEliminacion}
+/>
+
+
+      <ModalEditarTarea
+        isOpen={modalAbierto}
+        onClose={() => setModalAbierto(false)}
+        onSave={guardarCambiosTarea}
+        initialTitle={tareaEditando?.title || ""}
+        initialContent={tareaEditando?.content || ""}
+      />
     </div>
   );
 }
+

@@ -1,14 +1,70 @@
+/* ----------------- ANIMACIONES DE LAS TAREAS ----------------- */
+
+.card-animada-pendientes {
+  transition: box-shadow 500ms ease-out 260ms;
+}
+
+.card-animada-pendientes:hover {
+  box-shadow: 0px 0px 10px 0px rgba(244, 67, 54, 0.75);
+}
+
+.card-animada-proceso {
+  transition: box-shadow 500ms ease-out 260ms;
+}
+
+.card-animada-proceso:hover {
+  box-shadow: 0px 0px 10px 0px rgba(43, 43, 43, 0.75);
+}
+
+.card-animada-terminadas {
+  transition: box-shadow 500ms ease-out 260ms;
+}
+
+.card-animada-terminadas:hover {
+  box-shadow: 0px 0px 10px 0px rgba(0, 201, 20, 0.75);
+}
+
+/* ----------------- COLORES DE CABECERA DE COLUMNAS ----------------- */
+
 .header-tablero-pendientes {
-  background-color: #de2929;
+  background-color: #d02215; /* rojo */
   color: white;
+  padding: 1rem;
+  border-radius: 0.5rem 0.5rem 0 0;
+  text-align: center;
 }
 
 .header-tablero-enProceso {
-  background-color: #434242;
+  background-color: #434242; /* gris oscuro */
   color: white;
+  padding: 1rem;
+  border-radius: 0.5rem 0.5rem 0 0;
+  text-align: center;
 }
 
 .header-tablero-terminadas {
-  background-color: #058412;
+  background-color: #049b13; /* verde */
   color: white;
+  padding: 1rem;
+  border-radius: 0.5rem 0.5rem 0 0;
+  text-align: center;
+}
+
+/* ----------------- GENERAL ----------------- */
+
+.card-tarea-personalizada {
+  border-radius: 0.75rem;
+  transition: box-shadow 0.25s ease, transform 0.25s ease;
+  background-color: white;
+  position: relative;
+}
+
+.card-tarea-personalizada:hover {
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+  transform: translateY(-2px);
+}
+
+.card-tarea-personalizada:active {
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  transform: scale(0.99);
 }
