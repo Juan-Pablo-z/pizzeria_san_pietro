@@ -15,7 +15,8 @@
 
   min-height: 100dvh;
   padding: 16px;
-  background-color: var(--white);
+  background-color: var(--black);
+  color: var(--white);
   position: fixed;
   flex-direction: column;
   box-shadow: 8px 0 16px rgba(0, 0, 0, 0.1);
@@ -47,7 +48,7 @@
     flex: 1;
     display: flex;
     flex-direction: column;
-    padding-top: 8px;
+    padding-top: 24px;
     gap: 2px;
 
     & li {
@@ -70,8 +71,7 @@
     }
 
     & li.active {
-      color: var(--black);
-      background-color: var(--light);
+      background-color: #202020;
     }
   }
 
@@ -115,11 +115,7 @@
     & .sidebar-menu {
       padding-top: 32px;
       gap: 8px;
-
-      & li {
-        background: var(--light);
-      }
-
+      
       & li.active {
         color: var(--black);
         background-color: var(--primary);

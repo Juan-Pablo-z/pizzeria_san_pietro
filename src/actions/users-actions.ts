@@ -40,7 +40,7 @@ export const deleteUser = async (ced_emple: string) => {
   try {
     await pool.connect();
     await pool.query(
-      `UPDATE tmusuarios SET fkcods_user = 0 WHERE ced_emple = $1`,
+      `UPDATE tmusuarios SET fkcods_user = 0 WHERE ced_user = $1`,
       [ced_emple]
     );
     
