@@ -36,20 +36,21 @@ export const ContactForm = () => {
     formState: { errors, isValid },
   } = useForm<ContactFormData>({});
 
-  const onSubmit: SubmitHandler<ContactFormData> = async (data) => {
-    const {
-      name,
-      email,
-      message
-    } = data
-    try {
-      redirectWhatsApp(
-        RESTAURANT_CONTACT.PHONE_NUMBER,
-        `Hola soy *${name}*.\n Mi correo electrónico es *${email}*.\n ${message}`
-      );
-      reset();
-    } catch (error) {}
-  };
+const onSubmit: SubmitHandler<ContactFormData> = async (data) => {
+  const { name, email, message } = data;
+
+  try {
+    const phone = RESTAURANT_CONTACT.PHONE_NUMBER;
+    const text = `Hola soy *${name}*.\nMi correo electrónico es *${email}*.\n${message}`;
+    const encodedText = encodeURIComponent(text);
+
+    window.location.href = `/whatsapp?number=${phone}&text=${encodedText}`;
+    reset();
+  } catch (error) {
+    console.error("Error al enviar mensaje a WhatsApp:", error);
+  }
+};
+
 
   return (
     <div className="contact-form">
