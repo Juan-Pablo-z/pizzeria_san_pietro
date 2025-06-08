@@ -37,18 +37,18 @@ export const getUsers = async () => {
 export const deleteUser = async (ced_emple: string) => {
   const session = await auth();
   if (!session) return null;
+
   try {
-    await pool.connect();
     await pool.query(
-      `UPDATE tmusuarios SET fkcods_user = 0 WHERE ced_user = $1`,
+      `DELETE FROM tmusuarios WHERE ced_user = $1`,
       [ced_emple]
     );
-    
   } catch (error: any) {
-    console.log(error);
+    console.error("❌ Error al eliminar usuario:", error);
     throw new Error(error.message);
   }
 };
+
 
 export const createUser = async (data: {
   ced_user: string;
