@@ -1,12 +1,11 @@
 'use client';
-
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
 
 import './css/estilos.css'; 
-
 export default function WhatsAppRedirect() {
   const [isLoading, setIsLoading] = useState(true);
   const searchParams = useSearchParams();

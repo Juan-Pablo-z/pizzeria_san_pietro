@@ -1,7 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import { LoginForm } from "./LoginForm";
-
 export default function LoginPage() {
   return (
     <>
