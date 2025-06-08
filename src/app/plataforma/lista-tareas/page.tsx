@@ -26,9 +26,9 @@ interface Tarea {
 type ColumnasTareas = Record<EstadoTarea, Tarea[]>;
 
 const initialTareas: ColumnasTareas = {
-  pendientes: [{ id: "1", title: "Tarea 1", content: "Contenido de la tarea 1", name:"JP" }],
-  enProceso: [{ id: "2", title: "Tarea 2", content: "Contenido de la tarea 2", name:"AN" }],
-  terminadas: [{ id: "3", title: "Tarea 3", content: "Contenido de la tarea 3", name:"SF" }],
+  pendientes: [{ id: "1", title: "Tarea 1", content: "Contenido de la tarea 1", name:"Juan Fuentes" }],
+  enProceso: [{ id: "2", title: "Tarea 2", content: "Contenido de la tarea 2", name:"Ana Celis" }],
+  terminadas: [{ id: "3", title: "Tarea 3", content: "Contenido de la tarea 3", name:"Sofia Fuentes" }],
 };
 
 const claseFondo: Record<EstadoTarea, string> = {
