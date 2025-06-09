@@ -10,8 +10,8 @@ import {
   Divider,
   Input,
   Select,
-  SelectItem,
-} from "@nextui-org/react";
+} from "@heroui/react";
+import { SelectItem } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -105,8 +105,8 @@ export const UserForm: React.FC<Props> = ({ cargos, initialValues }) => {
   };
 
   return (
-    <div className="mt-6 grid lg:grid-cols-2">
-      <Card className="p-4 animate__fade-in-up">
+    <div className="mt-6 grid items-center lg:grid-cols-6">
+      <Card className="p-4 animate__fade-in-up lg:col-span-4 lg:col-start-2 ">
         <CardBody className="flex flex-col gap-4">
           <form
             onSubmit={handleSubmit(onSubmit)}

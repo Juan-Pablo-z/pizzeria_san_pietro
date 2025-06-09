@@ -84,7 +84,7 @@ export const NavBar = () => {
 
   return (
     <Navbar
-      className="transition-all fixed md:-translate-y-16"
+      className="transition-all fixed md:-translate-y-16 md:hidden lg:hidden"
       isBordered
       isMenuOpen={isMenuOpen}
       onMenuOpenChange={setIsMenuOpen}

@@ -12,7 +12,7 @@ const MENU_ITEMS = [
   {
     icon: "i-mdi-file-document-plus-outline",
     name: "Nueva tarea",
-    href: "/plataforma/tomar-pedido",
+    href: "/plataforma/crear-tareas",
     roles: [Cargos.ADMIN, Cargos.MESERA],
   },
   {

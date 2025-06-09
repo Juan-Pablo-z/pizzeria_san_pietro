@@ -1,12 +1,8 @@
 import { Metadata } from "next";
 import Image from "next/image";
-import { getImage } from "@/helpers";
-import { Recargo } from "@/interfaces";
-
 import "@/css/external/main.css";
 import Link from "next/link";
-import { getProducts } from "@/actions/products.actions";
-import { Button, Divider, Card, CardBody } from "@nextui-org/react";
+import { Button, Divider} from "@nextui-org/react";
 import { ContactForm } from "@/components";
 
 const NAVIGATE = [
@@ -61,11 +57,6 @@ export const metadata: Metadata = {
 };
 
 export default async function Home() {
-  const products = await getProducts();
-
-  const getPasajeroRecargo = (recargos: Recargo[]) => {
-    return recargos.find((r) => r.fkcod_tc_rec === 2)?.recargo_cliente || 0;
-  };
 
   return (
     <>
@@ -147,32 +138,6 @@ export default async function Home() {
       <div className="pt-4 pl-8 pr-8">
       <Divider className="my-4" />
       </div>
-      {/* Menú */}
-      {/* <section id="menu" className="p-section">
-        <h2 className="title">Nuestro menú</h2>
-        <div className="dish-grid mt-8">
-          {products.map((p) => (
-            <Card key={p.cod_prod} className="dish-card">
-              <Image
-                width={300}
-                height={1000}
-                src={getImage(p.img_prod)}
-                alt={p.nom_prod}
-              />
-              <CardBody className="dish-info">
-                <h3>{p.nom_prod}</h3>
-                <p className="line-clamp-2">{p.dprod}</p>
-                <span>
-                  ${" "}
-                  {(
-                    p.precio_base + getPasajeroRecargo(p.recargos)
-                  ).toLocaleString()}
-                </span>
-              </CardBody>
-            </Card>
-          ))}
-        </div>
-      </section> */}
       {/* Contacto */}
       <section id="contact" className="p-section">
         <h2 className="title">Contacto</h2>
