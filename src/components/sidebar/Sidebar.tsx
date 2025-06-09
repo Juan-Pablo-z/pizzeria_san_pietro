@@ -3,7 +3,6 @@
 import { Cargos } from "@/enum/cargos.enum";
 import { validateCargo } from "@/helpers";
 import { useHydration } from "@/hooks";
-import { useSidebarStore } from "@/store";
 import { Button, Tooltip } from "@nextui-org/react";
 import clsx from "clsx";
 import { signOut } from "next-auth/react";
@@ -11,6 +10,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { IUser } from "../../../nextauth";
+import { useSidebarStore } from "@/store";
 
 const MENU_ITEMS = [
   {
@@ -28,7 +28,7 @@ const MENU_ITEMS = [
   {
     icon: "i-mdi-file-document-plus-outline",
     name: "Nueva tarea",
-    href: "/plataforma/tomar-pedido",
+    href: "/plataforma/crear-tareas",
     roles: [Cargos.ADMIN],
   },
   {
