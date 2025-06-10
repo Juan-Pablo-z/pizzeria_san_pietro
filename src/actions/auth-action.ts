@@ -53,9 +53,7 @@ export const loginEmail = async (data: { password: string; email: string }) => {
       FROM tmusuarios AS u
       JOIN tmcargos AS c 
         ON u.fkcod_car_user = c.cod_car
-      WHERE
-        u.fkcods_user != 0 AND
-        email_user = $1
+      WHERE email_user = $1
       `,
       [data.email]
     );

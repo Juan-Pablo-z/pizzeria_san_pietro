@@ -22,8 +22,6 @@ export const getUsers = async () => {
       JOIN 
         tmcargos AS c 
           ON u.fkcod_car_user = c.cod_car
-      WHERE
-        u.fkcods_user != 0
       `);
     const users = res.rows;
     
