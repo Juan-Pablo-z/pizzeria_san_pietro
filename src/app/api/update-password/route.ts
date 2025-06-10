@@ -15,7 +15,7 @@ try {
 
     // 1. Buscar token válido
     const result = await pool.query(
-    `SELECT email FROM password_reset_tokens
+    `SELECT email FROM validacion_token
     WHERE token = $1 AND expires_at > NOW()`,
     [token]
     );
@@ -37,7 +37,7 @@ try {
 
     // 4. Eliminar token
     await pool.query(
-    `DELETE FROM password_reset_tokens WHERE token = $1`,
+    `DELETE FROM validacion_token WHERE token = $1`,
     [token]
     );
 

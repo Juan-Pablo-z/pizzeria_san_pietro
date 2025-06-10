@@ -12,7 +12,7 @@ try {
     const { token } = schema.parse(body);
 
 const result = await pool.query(
-  `SELECT * FROM password_reset_tokens
+  `SELECT * FROM validacion_token
 WHERE token = $1 AND expires_at > NOW()`,
 [token]
 );

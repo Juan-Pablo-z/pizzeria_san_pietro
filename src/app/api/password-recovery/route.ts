@@ -37,7 +37,7 @@ const expires = addMinutes(new Date(), 15);
 
 // se guardo el token con fecha
 await pool.query(
-`INSERT INTO password_reset_tokens (email, token, expires_at)
+`INSERT INTO validacion_token (email, token, expires_at)
 VALUES ($1, $2, $3)`,
 [email, token, expires]
 );
