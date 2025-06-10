@@ -1,11 +1,11 @@
 'use client';
 
 import { useSearchParams, useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { Input, Button, Card, CardBody } from '@nextui-org/react';
 import { toast } from 'react-toastify';
 
-export default function NuevaClaveForm() {
+function NuevaClaveFormInner() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const token = searchParams.get('token');
@@ -120,6 +120,14 @@ export default function NuevaClaveForm() {
   );
 }
 
+export default function NuevaClaveForm() {
+  return (
+    <Suspense fallback={<div className="h-screen flex items-center justify-center text-white">Cargando...</div>}>
+      <NuevaClaveFormInner />
+    </Suspense>
+  );
+}
+
 const gradientStyle = `
 .animated-bg {
   background-image: linear-gradient(
@@ -146,3 +154,4 @@ const gradientStyle = `
   }
 }
 `;
+
