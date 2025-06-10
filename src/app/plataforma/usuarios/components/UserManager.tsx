@@ -31,7 +31,7 @@ const UserManager: React.FC<Props> = ({ users: initialUsers }) => {
       <div className="mt-4 flex flex-col gap-3">
         <div className="grid">
           <Link href={"/plataforma/usuarios/crear"}>
-            <Button className="bg-dark text-white hover:bg-green-800">Crear empleado</Button>
+            <Button className="bg-green-500 text-white hover:bg-green-700">Crear empleado</Button>
           </Link>
         </div>
         <CustomTable
@@ -46,25 +46,29 @@ const UserManager: React.FC<Props> = ({ users: initialUsers }) => {
               accessor: "options",
               template: ({ ced_user }: User) => {
                 return (
-                  <div className="flex gap-2">
-                    <Button
-                      as={Link}
-                      href={`/plataforma/usuarios/editar/${ced_user}`}
-                      size="sm"
-                      isIconOnly
-                      className="bg-blue text-white"
-                    >
-                      <i className="i-mdi-pencil" />
-                    </Button>
-                    <Button
-                      onClick={() => handleDeleteUser(ced_user)}
-                      size="sm"
-                      isIconOnly
-                      className="bg-danger text-white"
-                    >
-                      <i className="i-mdi-delete" />
-                    </Button>
-                  </div>
+<div className="flex items-center justify-center gap-2">
+  <Button
+    as={Link}
+    href={`/plataforma/usuarios/editar/${ced_user}`}
+    isIconOnly
+    size="sm"
+    aria-label="Editar"
+    className="bg-gray-100 hover:bg-green-500 text-gray-700 hover:text-white rounded-full shadow-md transition duration-200"
+  >
+    <i className="i-mdi-pencil text-lg" />
+  </Button>
+
+  <Button
+    onClick={() => handleDeleteUser(ced_user)}
+    isIconOnly
+    size="sm"
+    aria-label="Eliminar"
+    className="bg-gray-100 hover:bg-red-600 text-gray-700 hover:text-white rounded-full shadow-md transition duration-200"
+  >
+    <i className="i-mdi-delete text-lg" />
+  </Button>
+</div>
+
                 );
               },
             },
