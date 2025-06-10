@@ -27,7 +27,7 @@ export default async function ReportesPage({
 
   return (
     <div className="main-container">
-      <h1 className="title">Reportes por fechas</h1>
+      <h1 className="title">Reportes por fecha</h1>
       <ReportesManager
         groupedData={groupedData}
         startDate={startDate}

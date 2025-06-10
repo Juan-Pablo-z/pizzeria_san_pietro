@@ -100,10 +100,12 @@ export const createUser = async (data: {
     await pool.query(insertUser, insertUserValues);
 
     
-  } catch (error: any) {
-    console.log(error);
-    throw new Error("Error al crear el usuario");
-  }
+} catch (error: any) {
+  console.error("🧨 Error SQL al crear el usuario:", error); // muestra el error completo
+  throw error; // <--- lanza el error real para que lo veas en consola
+}
+
+
 };
 
 export const getUserByCed = async (ced: string) => {

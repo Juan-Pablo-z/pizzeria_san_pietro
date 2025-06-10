@@ -33,7 +33,7 @@ export const UserSchema = z.object({
     .max(100, "El correo electrónico no debe exceder los 100 caracteres"),
   password_user: z
     .string()
-    .min(1, "La contraseña es obligatoria")
+    .min(8, "La contraseña es obligatoria")
     .max(100, "La contraseña no debe exceder los 100 caracteres"),
   fkcod_car_user: z.number({
     required_error: "El código de cargo es obligatorio",
