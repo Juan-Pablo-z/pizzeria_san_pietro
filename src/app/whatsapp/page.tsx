@@ -1,12 +1,12 @@
 'use client';
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
 
 import './css/estilos.css'; 
-export default function WhatsAppRedirect() {
+
+function WhatsAppRedirectInner() {
   const [isLoading, setIsLoading] = useState(true);
   const searchParams = useSearchParams();
   const number = searchParams.get('number');
@@ -17,9 +17,9 @@ export default function WhatsAppRedirect() {
 
     const redirectURL = `https://wa.me/${number}?text=${text}`;
     const timer = setTimeout(() => {
-      setIsLoading(false); // Cambia el estado a falso para que se vea el contenido
+      setIsLoading(false);
       window.location.href = redirectURL;
-    }, 5000); // tiempo de espera de 5 segundos
+    }, 5000);
 
     return () => clearTimeout(timer);
   }, [number, text]);
@@ -67,6 +67,14 @@ export default function WhatsAppRedirect() {
         )}
       </div>
     </main>
+  );
+}
+
+export default function WhatsAppRedirect() {
+  return (
+    <Suspense fallback={<div className="h-screen flex items-center justify-center text-white">Cargando...</div>}>
+      <WhatsAppRedirectInner />
+    </Suspense>
   );
 }
 
