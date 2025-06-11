@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 import Image from 'next/image';
+import { recuperarContrasena } from '@/actions/contraseña-actions';
 
 export default function PasswordRecoveryPage() {
   const [email, setEmail] = useState('');
@@ -14,17 +15,13 @@ export default function PasswordRecoveryPage() {
     setLoading(true);
 
     try {
-      const res = await fetch('/api/password-recovery', {
-        method: 'POST',
-        body: JSON.stringify({ email }),
-        headers: { 'Content-Type': 'application/json' },
-      });
+      const res = await recuperarContrasena(email);
 
-      if (res.ok) {
+      if (res?.error) {
+        toast.error('⚠️ ' + res.error);
+      } else {
         setEnviado(true);
         toast.success('📩 Revisa tu correo para continuar');
-      } else {
-        toast.error('⚠️ Correo no registrado');
       }
     } catch (error) {
       toast.error('❌ Error al enviar el correo');
@@ -34,10 +31,13 @@ export default function PasswordRecoveryPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center animated-bg px-4">
+    <div className="relative min-h-screen flex items-center justify-center px-4">
+      {/* Fondo animado local al componente */}
+      <div className="animated-bg" />
+
       <form
         onSubmit={handleSubmit}
-        className="bg-white shadow-2xl rounded-2xl p-8 max-w-lg w-full space-y-6"
+        className="relative z-10 bg-white shadow-2xl rounded-2xl p-8 max-w-lg w-full space-y-6"
       >
         <div className="flex flex-col items-center">
           <Image
@@ -91,33 +91,6 @@ export default function PasswordRecoveryPage() {
           </div>
         )}
       </form>
-
-      <style jsx>{`
-        .animated-bg {
-          background-image: linear-gradient(
-            270deg,
-            #047b34,
-            #272727,
-            #af0710,
-            #272727,
-            #047b34
-          );
-          background-size: 500% 500%;
-          animation: gradientFlow 20s ease infinite;
-        }
-
-        @keyframes gradientFlow {
-          0% {
-            background-position: 0% 50%;
-          }
-          50% {
-            background-position: 100% 50%;
-          }
-          100% {
-            background-position: 0% 50%;
-          }
-        }
-      `}</style>
     </div>
   );
 }
