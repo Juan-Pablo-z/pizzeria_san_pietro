@@ -9,10 +9,13 @@ import {
   Input,
   Select,
   SelectItem,
-} from "@heroui/react";
+} from "@nextui-org/react";
 import { parseDate } from "@internationalized/date";
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { useSession } from "next-auth/react";
+import { StatusTareas } from "@/enum/status-tareas.enum";
+import { toast } from "react-toastify";
 
 interface User {
   ced_user: string;
@@ -21,6 +24,12 @@ interface User {
 
 interface Props {
   users: User[];
+    prioridades: Prioridad[];
+}
+
+interface Prioridad {
+  id_prioridad: number;
+  nivel: string;
 }
 
 interface UserFormData {
@@ -28,7 +37,9 @@ interface UserFormData {
   descripcion: string;
 }
 
-export default function CrearTareas({ users }: Props): JSX.Element {
+export default function CrearTareas({ users, prioridades }: Props): JSX.Element {
+  const { data: session } = useSession();
+  const [selectedPrioridad, setSelectedPrioridad] = useState("");
   const [selectedUser, setSelectedUser] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
@@ -55,8 +66,8 @@ export default function CrearTareas({ users }: Props): JSX.Element {
     mode: "onChange",
   });
 
-   const onSubmit: SubmitHandler<UserFormData> = async (data) => {
-    if (!selectedUser || !isValidRange) return;
+  const onSubmit: SubmitHandler<UserFormData> = async (data) => {
+    if (!selectedUser || !isValidRange || !session?.user?.ced_user) return;
 
     setIsLoading(true);
 
@@ -66,28 +77,34 @@ export default function CrearTareas({ users }: Props): JSX.Element {
         descripcion: data.descripcion,
         fecha_limite: dateRange.end,
         id_asignado: selectedUser,
-        id_creador: "ADMIN", // cambia esto por el usuario real logueado
-        id_estado: 1, // 1 = pendientes
-        id_prioridad: 1, // puedes cambiar a una prioridad seleccionable
+        id_creador: session.user.ced_user,
+        id_estado: StatusTareas.PENDIENTE,
+        id_prioridad: Number(selectedPrioridad), 
       });
 
       reset();
       setSelectedUser("");
+      setSelectedPrioridad("");
       setDateRange({ start: "", end: "" });
+      toast.success("Tarea editada correctamente");
     } catch (error) {
+      toast.error("Error al crear tarea");
       console.error("Error al crear tarea:", error);
     } finally {
       setIsLoading(false);
     }
   };
 
-
   return (
     <div className="mt-6 grid items-center lg:grid-cols-6">
       <Card className="p-4 animate__fade-in-up lg:col-span-4 lg:col-start-2 ">
         <CardBody>
-          <form className="flex flex-col gap-4" onSubmit={handleSubmit(onSubmit)}>
+          <form
+            className="flex flex-col gap-4"
+            onSubmit={handleSubmit(onSubmit)}
+          >
             <Input
+              {...register("titulo", { required: true })}
               fullWidth
               labelPlacement="outside"
               size="md"
@@ -97,6 +114,7 @@ export default function CrearTareas({ users }: Props): JSX.Element {
               label="Titulo de la tarea"
             ></Input>
             <Input
+              {...register("descripcion", { required: true })}
               label="Descripción de la tarea"
               fullWidth
               labelPlacement="outside"
@@ -105,7 +123,7 @@ export default function CrearTareas({ users }: Props): JSX.Element {
               placeholder="Ingrese la descripción de la tarea"
               isRequired
             ></Input>
-              {/* <DateRangePicker
+            <DateRangePicker
               label="Fecha límite"
               fullWidth
               size="md"
@@ -125,7 +143,7 @@ export default function CrearTareas({ users }: Props): JSX.Element {
                   end: value?.end.toString(),
                 });
               }}
-            /> */}
+            />
             <Select
               label="Asignar a"
               placeholder="Seleccione un usuario"
@@ -141,10 +159,27 @@ export default function CrearTareas({ users }: Props): JSX.Element {
                 <SelectItem key={user.ced_user}>{user.nom_user}</SelectItem>
               ))}
             </Select>
-          <Button
+            <Select
+              label="Prioridad"
+              placeholder="Seleccione una prioridad"
+              selectedKeys={[selectedPrioridad]}
+              onSelectionChange={(keys) => {
+                const value = Array.from(keys)[0] as string;
+                setSelectedPrioridad(value);
+              }}
+              className="max-w-xs"
+              isRequired
+            >
+              {prioridades.map((prio) => (
+                <SelectItem key={prio.id_prioridad}>{prio.nivel}</SelectItem>
+              ))}
+            </Select>
+            <Button
               type="submit"
               isLoading={isLoading}
-              isDisabled={isLoading || !isValid || !isValidRange || !selectedUser}
+              isDisabled={
+                isLoading || !isValid || !isValidRange || !selectedUser
+              }
               className="btn btn-primary"
             >
               Crear Tarea
