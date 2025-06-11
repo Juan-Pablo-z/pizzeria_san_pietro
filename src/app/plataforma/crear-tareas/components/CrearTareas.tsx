@@ -1,5 +1,6 @@
 "use client";
 
+import { createTarea } from "@/actions/tareas-actions";
 import {
   Button,
   Card,
@@ -9,6 +10,7 @@ import {
   Select,
   SelectItem,
 } from "@heroui/react";
+import { parseDate } from "@internationalized/date";
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 
@@ -19,6 +21,11 @@ interface User {
 
 interface Props {
   users: User[];
+}
+
+interface UserFormData {
+  titulo: string;
+  descripcion: string;
 }
 
 export default function CrearTareas({ users }: Props): JSX.Element {
@@ -39,20 +46,47 @@ export default function CrearTareas({ users }: Props): JSX.Element {
     !!dateRange.end &&
     dateRange.end.length > 0;
 
-//   const {
-//     register,
-//     handleSubmit,
-//     reset,
-//     formState: { errors, isValid },
-//   } = useForm<UserFormData>({
-//     defaultValues: initialValues,
-//   });
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors, isValid },
+  } = useForm<UserFormData>({
+    mode: "onChange",
+  });
+
+   const onSubmit: SubmitHandler<UserFormData> = async (data) => {
+    if (!selectedUser || !isValidRange) return;
+
+    setIsLoading(true);
+
+    try {
+      await createTarea({
+        titulo: data.titulo,
+        descripcion: data.descripcion,
+        fecha_limite: dateRange.end,
+        id_asignado: selectedUser,
+        id_creador: "ADMIN", // cambia esto por el usuario real logueado
+        id_estado: 1, // 1 = pendientes
+        id_prioridad: 1, // puedes cambiar a una prioridad seleccionable
+      });
+
+      reset();
+      setSelectedUser("");
+      setDateRange({ start: "", end: "" });
+    } catch (error) {
+      console.error("Error al crear tarea:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
 
   return (
     <div className="mt-6 grid items-center lg:grid-cols-6">
       <Card className="p-4 animate__fade-in-up lg:col-span-4 lg:col-start-2 ">
         <CardBody>
-          <form className="flex flex-col gap-4" action="">
+          <form className="flex flex-col gap-4" onSubmit={handleSubmit(onSubmit)}>
             <Input
               fullWidth
               labelPlacement="outside"
@@ -71,7 +105,7 @@ export default function CrearTareas({ users }: Props): JSX.Element {
               placeholder="Ingrese la descripción de la tarea"
               isRequired
             ></Input>
-            {/* <DateRangePicker
+              {/* <DateRangePicker
               label="Fecha límite"
               fullWidth
               size="md"
@@ -80,8 +114,8 @@ export default function CrearTareas({ users }: Props): JSX.Element {
               value={
                 isValidRange
                   ? {
-                      start: parseDate(dateRange.start? dateRange.start : ""),
-                      end: parseDate(dateRange.end? dateRange.end : ""),
+                      start: parseDate(dateRange.start || ""),
+                      end: parseDate(dateRange.end || ""),
                     }
                   : null
               }
@@ -107,13 +141,13 @@ export default function CrearTareas({ users }: Props): JSX.Element {
                 <SelectItem key={user.ced_user}>{user.nom_user}</SelectItem>
               ))}
             </Select>
-            <Button
+          <Button
               type="submit"
               isLoading={isLoading}
-            //   isDisabled={isLoading || !isValid}
+              isDisabled={isLoading || !isValid || !isValidRange || !selectedUser}
               className="btn btn-primary"
             >
-              Crear Usuario
+              Crear Tarea
             </Button>
           </form>
         </CardBody>
