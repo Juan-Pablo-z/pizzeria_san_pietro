@@ -8,6 +8,42 @@
   }
 }
 
+/* Fondo animado y altura completa */
+html, body, #__next {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.animated-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -10;
+  background-image: linear-gradient(
+    270deg,
+    #047b34,
+    #272727,
+    #af0710,
+    #272727,
+    #047b34
+  );
+  background-size: 500% 500%;
+  animation: gradientFlow 20s ease infinite;
+}
+
+@keyframes gradientFlow {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+
 @import url(variables.css);
 @import url(styles.css);
 @import url(animations.css);
