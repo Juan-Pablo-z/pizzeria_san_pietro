@@ -53,8 +53,8 @@ VALUES ($1, $2, $3)`,
 
     // se envia el correo de recuperación
     await resend.emails.send({
-    from: 'laciel071278@resend.dev',
-      to: 'laciel071278@gmail.com', // unico correo permitido por resend
+    from: 'info@pizzeriasanpietro.store',
+    to: email,
     subject: 'Recuperación de contraseña - San Pietro',
     html: `
         <p>Hola ${user.nom_user},</p>
