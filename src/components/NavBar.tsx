@@ -33,12 +33,6 @@ const MENU_ITEMS = [
     href: "/plataforma/usuarios",
     roles: [Cargos.ADMIN],
   },
-  /*{
-    icon: "i-ep-dish",
-    name: "Productos",
-    href: "/plataforma/productos",
-    roles: [Cargos.ADMIN],
-  },*/
   {
     icon: "i-mdi-file-document-plus-outline",
     name: "Nueva tarea",
@@ -51,30 +45,12 @@ const MENU_ITEMS = [
     href: "/plataforma/reportes",
     roles: [Cargos.ADMIN],
   },
-  /*{
-    icon: "i-mdi-oven",
-    name: "Cocina",
-    href: "/plataforma/cocina",
-    roles: [Cargos.ADMIN, Cargos.COCINERA_JEFE, Cargos.COCINERA],
-  },*/
-  {
-    icon: "i-mdi-clipboard-text-clock-outline",
-    name: "Tareas",
-    href: "/plataforma/pedidos",
-    roles: [Cargos.ADMIN],
-  },
   {
     icon: "i-mdi-clipboard-text-clock-outline",
     name: "Tareas",
     href: "/plataforma/Lista de Tareas",
     roles: [Cargos.ADMIN],
   },
-  /*{
-    icon: "i-mdi-cash-register",
-    name: "Caja",
-    href: "/plataforma/caja",
-    roles: [Cargos.ADMIN],
-  },*/
 ];
 
 export const NavBar = () => {

@@ -9,7 +9,7 @@ import { ModalConfirmarEliminacion } from "./components/ModalConfirmarEliminacio
 import { toast } from "react-toastify";
 import { Divider } from "@heroui/react";
 import { useSession } from "next-auth/react";
-import { getTareasPorRol } from "@/actions/tareas-actions";
+import { getTareasPorRol, cambiarEstadoTarea } from "@/actions/tareas-actions";
 
 import "react-toastify/dist/ReactToastify.css";
 import "./css/estilos.css";
@@ -30,6 +30,11 @@ const estadoMapeo: Record<number, EstadoTarea> = {
   0: "pendientes",
   1: "enProceso",
   2: "terminadas",
+};
+const estadoMapeoInverso: Record<EstadoTarea, number> = {
+  pendientes: 0,
+  enProceso: 1,
+  terminadas: 2,
 };
 
 const claseFondo: Record<EstadoTarea, string> = {
@@ -57,6 +62,7 @@ export default function ListaTareasPage() {
     enProceso: [],
     terminadas: [],
   });
+  const [isLoading, setIsLoading] = useState(true);
 
   const [modalAbierto, setModalAbierto] = useState(false);
   const [modalEliminarAbierto, setModalEliminarAbierto] = useState(false);
@@ -66,7 +72,11 @@ export default function ListaTareasPage() {
 
   useEffect(() => {
     async function cargarTareas() {
-      if (!session?.user?.ced_user || session?.user?.fkcod_car_user === undefined) return;
+      if (!session?.user?.ced_user || session?.user?.fkcod_car_user === undefined) {
+        setIsLoading(false);
+        return;
+      }
+      setIsLoading(true);
       const tareas = await getTareasPorRol(session.user.ced_user, session.user.fkcod_car_user);
       console.log("🔍 TAREAS RECIBIDAS:", tareas); 
       console.log("🧾 Sesión actual:", session?.user);
@@ -86,46 +96,73 @@ export default function ListaTareasPage() {
       console.log(agrupadas);
 
       setColumns(agrupadas);
+      setIsLoading(false);
     }
 
     cargarTareas();
   }, [session]);
 
-  const handleDragEnd = ({ active, over }: any) => {
+  const handleDragEnd = async ({ active, over }: any) => {
     if (!over) return;
 
     const activeId = +active.id;
-    const overId = +over.id;
-
     let sourceColumn: EstadoTarea | null = null;
     let targetColumn: EstadoTarea | null = null;
 
+    // Buscar columna origen
     for (const key of Object.keys(columns) as EstadoTarea[]) {
       if (columns[key].some((t) => t.id_tarea === activeId)) {
         sourceColumn = key;
+        break;
       }
-      if (columns[key].some((t) => t.id_tarea === overId) || String(overId) === key) {
-        targetColumn = key;
+    }
+
+    // Determinar columna destino
+    if (["pendientes", "enProceso", "terminadas"].includes(over.id)) {
+      targetColumn = over.id as EstadoTarea;
+    } else {
+      for (const key of Object.keys(columns) as EstadoTarea[]) {
+        if (columns[key].some((t) => t.id_tarea === +over.id)) {
+          targetColumn = key;
+          break;
+        }
       }
     }
 
     if (!sourceColumn || !targetColumn) return;
 
+    // Si es la misma columna, reordenar
     if (sourceColumn === targetColumn) {
       const tareas = [...columns[sourceColumn]];
       const oldIndex = tareas.findIndex((t) => t.id_tarea === activeId);
-      const newIndex = tareas.findIndex((t) => t.id_tarea === overId);
-      const reordered = arrayMove(tareas, oldIndex, newIndex);
-      setColumns((prev) => ({ ...prev, [sourceColumn!]: reordered }));
+      let newIndex = tareas.findIndex((t) => t.id_tarea === +over.id);
+      // Si soltó en el área vacía de la columna, poner al final
+      if (["pendientes", "enProceso", "terminadas"].includes(over.id)) {
+        newIndex = tareas.length - 1;
+      }
+      if (oldIndex !== -1 && newIndex !== -1 && oldIndex !== newIndex) {
+        const reordered = arrayMove(tareas, oldIndex, newIndex);
+        setColumns((prev) => ({ ...prev, [sourceColumn!]: reordered }));
+      }
     } else {
+      // Mover entre columnas y actualizar en BD
       const tareaMovida = columns[sourceColumn].find((t) => t.id_tarea === activeId);
       if (!tareaMovida) return;
 
+      // Actualiza visualmente primero (optimista)
       setColumns((prev) => ({
         ...prev,
         [sourceColumn]: prev[sourceColumn].filter((t) => t.id_tarea !== activeId),
-        [targetColumn]: [...prev[targetColumn], tareaMovida],
+        [targetColumn]: [...prev[targetColumn], { ...tareaMovida, id_estado: estadoMapeoInverso[targetColumn] }],
       }));
+
+      // Actualiza en la base de datos
+      try {
+        await cambiarEstadoTarea(activeId, estadoMapeoInverso[targetColumn]);
+      } catch (error) {
+        toast.error("Error al cambiar el estado de la tarea");
+        // Si falla, podrías recargar o revertir el cambio visual si lo deseas
+      }
     }
   };
 
@@ -176,27 +213,34 @@ export default function ListaTareasPage() {
     <div className="main-container">
       <h1 className="title mb-4">Lista de Tareas</h1>
       <Divider className="my-4" />
-      <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {(Object.entries(columns) as [EstadoTarea, Tarea[]][]).map(([columnaId, tareas]) => (
-            <ColumnaTareas
-              key={columnaId}
-              id={columnaId}
-              titulo={
-                columnaId === "enProceso"
-                  ? "En Proceso"
-                  : columnaId.charAt(0).toUpperCase() + columnaId.slice(1)
-              }
-              tareas={tareas}
-              claseFondo={claseFondo[columnaId]}
-              claseAnimacion={claseAnimacion[columnaId]}
-              claseDivider={claseDivider[columnaId]}
-              onEdit={(id) => handleEditarTarea(columnaId, Number(id))}
-              onDelete={(id) => handleEliminarTarea(columnaId, Number(id))}
-            />
-          ))}
+      {isLoading ? (
+        <div className="flex flex-col items-center justify-center py-32">
+          <div className="animate-spin border-t-4 border-primary border-solid w-16 h-16 rounded-full mx-auto shadow-xl mb-6"></div>
+          <p className="text-lg text-gray-600 font-medium">Cargando tareas, por favor espera...</p>
         </div>
-      </DndContext>
+      ) : (
+        <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {(Object.entries(columns) as [EstadoTarea, Tarea[]][]).map(([columnaId, tareas]) => (
+              <ColumnaTareas
+                key={columnaId}
+                id={columnaId}
+                titulo={
+                  columnaId === "enProceso"
+                    ? "En Proceso"
+                    : columnaId.charAt(0).toUpperCase() + columnaId.slice(1)
+                }
+                tareas={tareas}
+                claseFondo={claseFondo[columnaId]}
+                claseAnimacion={claseAnimacion[columnaId]}
+                claseDivider={claseDivider[columnaId]}
+                onEdit={(id) => handleEditarTarea(columnaId, Number(id))}
+                onDelete={(id) => handleEliminarTarea(columnaId, Number(id))}
+              />
+            ))}
+          </div>
+        </DndContext>
+      )}
 
       <ModalConfirmarEliminacion
         isOpen={modalEliminarAbierto}
