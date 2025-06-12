@@ -2,6 +2,8 @@
 
 import { Cargos } from "@/enum/cargos.enum";
 import pool from "@/lib/db";
+import { sendAssignmentEmail } from "@/lib/sendAssignmentEmail"; // Ajusta la ruta si es diferente
+
 
 
 // Obtener todas las tareas (opcionalmente por usuario)
@@ -42,8 +44,8 @@ export async function createTarea(data: {
   fecha_limite?: string;
   id_asignado?: string;
   id_creador: string;
-  id_estado: number;     // 1: pendiente, 2: enProceso, 3: terminada
-  id_prioridad: number;  // según tu tabla de prioridades
+  id_estado: number;
+  id_prioridad: number;
 }) {
   try {
     const {
@@ -56,15 +58,39 @@ export async function createTarea(data: {
       id_prioridad,
     } = data;
 
+    // 1. Insertar tarea en la base de datos
     const result = await pool.query(
       `INSERT INTO tareas (titulo, descripcion, fecha_limite, id_asignado, id_creador, id_estado, id_prioridad)
        VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *`,
       [titulo, descripcion || null, fecha_limite || null, id_asignado || null, id_creador, id_estado, id_prioridad]
     );
 
-    return result.rows[0];
+    const tarea = result.rows[0];
+
+    // 2. Si hay asignado, buscar su correo y enviarle un email
+    if (id_asignado) {
+      const resUser = await pool.query(
+        `SELECT nom_user, email_user FROM tmusuarios WHERE ced_user = $1`,
+        [id_asignado]
+      );
+
+      const user = resUser.rows[0];
+
+      if (user?.email_user) {
+        await sendAssignmentEmail({
+          to: user.email_user,
+          nombre: user.nom_user,
+          tarea: {
+            titulo: tarea.titulo,
+            descripcion: tarea.descripcion || "",
+          },
+        });
+      }
+    }
+
+    return tarea;
   } catch (error) {
-    console.error("Error al crear tarea:", error);
+    console.error(" Error al crear tarea:", error);
     throw error;
   }
 }
@@ -168,3 +194,63 @@ export async function cambiarEstadoTarea(id_tarea: number, id_estado: number) {
     throw error;
   }
 }
+
+// Obtener tareas filtradas por nombre y rango de fechas
+export async function getTareasFiltradas({
+  nombre,
+  fechaInicio,
+  fechaFin,
+}: {
+  nombre?: string;
+  fechaInicio?: string;
+  fechaFin?: string;
+}) {
+  try {
+    let query = `
+      SELECT 
+        t.id_tarea,
+        t.titulo,
+        t.descripcion,
+        t.fecha_creacion,
+        t.fecha_limite,
+        t.id_asignado,
+        t.id_creador,
+        creador.nom_user AS nombre_creador,
+        asignado.nom_user AS nombre_asignado,
+        e.estado AS estado_tarea,
+        p.nivel AS prioridad_tarea,
+        t.id_estado,
+        t.id_prioridad
+      FROM tareas t
+      LEFT JOIN tmusuarios creador ON t.id_creador = creador.ced_user
+      LEFT JOIN tmusuarios asignado ON t.id_asignado = asignado.ced_user
+      INNER JOIN estados_tareas e ON t.id_estado = e.id_estado
+      INNER JOIN prioridades p ON t.id_prioridad = p.id_prioridad
+      WHERE 1=1
+    `;
+
+    const params: any[] = [];
+    let i = 1;
+
+    if (nombre) {
+      query += ` AND LOWER(asignado.nom_user) LIKE LOWER($${i})`;
+      params.push(`%${nombre}%`);
+      i++;
+    }
+
+    if (fechaInicio && fechaFin) {
+      query += ` AND t.fecha_creacion BETWEEN $${i} AND $${i + 1}`;
+      params.push(fechaInicio, fechaFin);
+      i += 2;
+    }
+
+    query += ` ORDER BY t.fecha_creacion DESC`;
+
+    const result = await pool.query(query, params);
+    return result.rows;
+  } catch (error) {
+    console.error("Error al obtener tareas filtradas:", error);
+    throw error;
+  }
+}
+
