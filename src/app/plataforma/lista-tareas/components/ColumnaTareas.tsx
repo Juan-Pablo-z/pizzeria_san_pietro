@@ -10,13 +10,7 @@ import {
 import { CardTarea } from "./CardTarea";
 import { Divider } from "@heroui/divider";
 import "../css/estilos.css"; // si estás en components/
-
-interface Tarea {
-  id: string;
-  title: string;
-  content: string;
-  name: string;
-}
+import { Tarea } from "../page";
 
 interface Props {
   id: string;
@@ -25,8 +19,8 @@ interface Props {
   claseFondo: string;
   claseAnimacion: string;
   claseDivider: string;
-  onEdit: (tareaId: string) => void;
-  onDelete: (tareaId: string) => void;
+  onEdit: (tareaId: number) => void;
+  onDelete: (tareaId: number) => void;
 }
 
 export const ColumnaTareas = ({
@@ -62,19 +56,19 @@ export const ColumnaTareas = ({
         <Divider className={`bg-${claseDivider}`} />
         <CardBody className="flex flex-col gap-4 p-4 !bg-[#e3eaf2]">
           <SortableContext
-            items={tareas.map((t) => t.id)}
+            items={tareas.map((t) => t.id_tarea)}
             strategy={verticalListSortingStrategy}
           >
             {tareas.length > 0 ? (
               tareas.map((t) => (
                 <CardTarea
-                  key={t.id}
-                  id={t.id}
-                  title={t.title}
-                  content={t.content}
-                  name={t.name}
-                  onEdit={() => onEdit(t.id)}
-                  onDelete={() => onDelete(t.id)}
+                  key={t.id_tarea}
+                  id={t.id_tarea}
+                  title={t.titulo}
+                  content={t.descripcion}
+                  name={t.nombre_asignado}
+                  onEdit={() => onEdit(t.id_tarea)}
+                  onDelete={() => onDelete(t.id_tarea)}
                 />
               ))
             ) : (

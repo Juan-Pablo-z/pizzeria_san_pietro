@@ -1,21 +1,39 @@
 "use server";
 
+import { Cargos } from "@/enum/cargos.enum";
 import pool from "@/lib/db";
 
 
 // Obtener todas las tareas (opcionalmente por usuario)
-export async function getTareas(userId?: string) {
+export async function getTareas(userId: string) {
   try {
-    const query = userId
-      ? "SELECT * FROM tareas WHERE id_asignado = $1 ORDER BY fecha_creacion DESC"
-      : "SELECT * FROM tareas ORDER BY fecha_creacion DESC";
-    const result = await pool.query(query, userId ? [userId] : []);
+    const result = await pool.query(
+      `
+      SELECT 
+        t.id_tarea,
+        t.titulo,
+        t.descripcion,
+        t.fecha_creacion,
+        t.fecha_limite,
+        t.id_estado,
+        t.id_prioridad,
+        t.id_asignado,
+        t.id_creador,
+        u.nom_user AS nombre_asignado
+      FROM tareas t
+      LEFT JOIN tmusuarios u ON t.id_asignado = u.ced_user
+      WHERE t.id_asignado = $1
+      ORDER BY t.fecha_creacion DESC
+      `,
+      [userId]
+    );
     return result.rows;
   } catch (error) {
     console.error("Error al obtener tareas:", error);
     throw error;
   }
 }
+
 
 // Crear una nueva tarea
 export async function createTarea(data: {
@@ -119,6 +137,20 @@ export async function getTareasAll() {
     return result.rows;
   } catch (error) {
     console.error("Error al obtener todas las tareas:", error);
+    throw error;
+  }
+}
+
+// Obtener tareas según el rol del usuario
+export async function getTareasPorRol(userId: string, cargo: number) {
+  try {
+    if (cargo === Cargos.ADMIN || cargo === Cargos.SUPER_ADMIN) {
+      return await getTareasAll(); // Todas las tareas con detalles
+    } else {
+      return await getTareas(userId); // Solo las del usuario asignado
+    }
+  } catch (error) {
+    console.error("Error al obtener tareas según el rol:", error);
     throw error;
   }
 }
