@@ -38,12 +38,7 @@ const MENU_ITEMS = [
     roles: [Cargos.ADMIN],
   },
 
-    {
-    icon: "i-mdi-file-chart-outline",
-    name: "Reportes2",
-    href: "/plataforma/reportes2",
-    roles: [Cargos.ADMIN],
-  },
+
 
   {
     icon: "i-mdi-clipboard-text-clock-outline",

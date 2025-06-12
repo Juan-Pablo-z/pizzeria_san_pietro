@@ -272,5 +272,59 @@ export async function getTareasFiltradas({
     console.error("Error al obtener tareas filtradas:", error);
     throw error;
   }
+
 }
+
+export async function getTareaPorId(id: number) {
+  try {
+    const result = await pool.query(
+      `SELECT 
+        t.id_tarea,
+        t.titulo,
+        t.descripcion,
+        TO_CHAR(t.fecha_limite, 'YYYY-MM-DD') AS fecha_limite,
+        t.id_asignado,
+        asignado.nom_user AS nombre_asignado,
+        t.id_prioridad
+      FROM tareas t
+      LEFT JOIN tmusuarios asignado ON asignado.ced_user = t.id_asignado
+      WHERE t.id_tarea = $1`,
+      [id]
+    );
+
+    if (result.rowCount === 0) return null;
+
+    return result.rows[0];
+  } catch (error) {
+    console.error("❌ Error al obtener tarea por ID:", error);
+    throw error;
+  }
+}
+
+// Obtener todos los usuarios
+export async function getUsuarios() {
+  try {
+    const result = await pool.query(
+      `SELECT ced_user, nom_user FROM tmusuarios ORDER BY nom_user ASC`
+    );
+    return result.rows;
+  } catch (error) {
+    console.error("Error al obtener usuarios:", error);
+    throw error;
+  }
+}
+
+// Obtener todas las prioridades
+export async function getPrioridades() {
+  try {
+    const result = await pool.query(
+      `SELECT id_prioridad, nivel FROM prioridades ORDER BY id_prioridad ASC`
+    );
+    return result.rows;
+  } catch (error) {
+    console.error("Error al obtener prioridades:", error);
+    throw error;
+  }
+}
+
 
