@@ -7,7 +7,7 @@ import {
   ModalBody,
   ModalFooter,
   Button,
-} from "@heroui/react";
+} from "@nextui-org/react";
 
 interface Props {
   isOpen: boolean;

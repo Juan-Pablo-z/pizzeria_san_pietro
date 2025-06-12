@@ -1,54 +1,52 @@
 "use client";
 
-import { createTarea } from "@/actions/tareas-actions";
+import { editTarea } from "@/actions/tareas-actions";
 import {
   Button,
   Card,
   CardBody,
-  DateRangePicker,
   Input,
   Select,
   SelectItem,
+  DateRangePicker,
 } from "@nextui-org/react";
+import { useEffect, useState } from "react";
 import { parseDate } from "@internationalized/date";
-import { useState } from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
-import { useSession } from "next-auth/react";
-import { StatusTareas } from "@/enum/status-tareas.enum";
+import { useForm, SubmitHandler } from "react-hook-form";
+import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 
-interface User {
-  ced_user: string;
-  nom_user: string;
-}
-
 interface Props {
-  users: User[];
-    prioridades: Prioridad[];
+  tarea: {
+    id_tarea: number;
+    titulo: string;
+    descripcion: string;
+    fecha_limite?: string;
+    id_asignado: string;
+    id_prioridad: number;
+  };
+  users: { ced_user: string; nom_user: string }[];
+  prioridades: { id_prioridad: number; nivel: string }[];
 }
 
-interface Prioridad {
-  id_prioridad: number;
-  nivel: string;
-}
-
-interface UserFormData {
+interface FormData {
   titulo: string;
   descripcion: string;
 }
 
-export default function CrearTareas({ users, prioridades }: Props): JSX.Element {
-  const { data: session } = useSession();
-  const [selectedPrioridad, setSelectedPrioridad] = useState("");
-  const [selectedUser, setSelectedUser] = useState("");
+export default function EditarTareaForm({ tarea, users, prioridades }: Props) {
+  const router = useRouter();
+
+  const [selectedUser, setSelectedUser] = useState(tarea.id_asignado);
+  const [selectedPrioridad, setSelectedPrioridad] = useState(String(tarea.id_prioridad));
   const [isLoading, setIsLoading] = useState(false);
 
   const [dateRange, setDateRange] = useState<{
     start?: string;
     end?: string;
   }>({
-    start: "",
-    end: "",
+    start: tarea.fecha_limite || "",
+    end: tarea.fecha_limite || "",
   });
 
   const isValidRange =
@@ -60,37 +58,30 @@ export default function CrearTareas({ users, prioridades }: Props): JSX.Element 
   const {
     register,
     handleSubmit,
-    reset,
     formState: { errors, isValid },
-  } = useForm<UserFormData>({
+  } = useForm<FormData>({
+    defaultValues: {
+      titulo: tarea.titulo,
+      descripcion: tarea.descripcion,
+    },
     mode: "onChange",
   });
 
-  const onSubmit: SubmitHandler<UserFormData> = async (data) => {
-    if (!selectedUser || !isValidRange || !session?.user?.ced_user) return;
-
-    setIsLoading(true);
-
+  const onSubmit: SubmitHandler<FormData> = async (data) => {
     try {
-      await createTarea({
+      setIsLoading(true);
+      await editTarea(tarea.id_tarea, {
         titulo: data.titulo,
         descripcion: data.descripcion,
-        fecha_creacion: dateRange.start,
         fecha_limite: dateRange.end,
         id_asignado: selectedUser,
-        id_creador: session.user.ced_user,
-        id_estado: StatusTareas.PENDIENTE,
-        id_prioridad: Number(selectedPrioridad), 
+        id_prioridad: Number(selectedPrioridad),
       });
-
-      reset();
-      setSelectedUser("");
-      setSelectedPrioridad("");
-      setDateRange({ start: "", end: "" });
-      toast.success("Tarea creada correctamente");
+      toast.success("Tarea actualizada correctamente");
+      router.push("/plataforma/lista-tareas");
     } catch (error) {
-      toast.error("Error al crear tarea");
-      console.error("Error al crear tarea:", error);
+      toast.error("Error al actualizar tarea");
+      console.error("❌ Error:", error);
     } finally {
       setIsLoading(false);
     }
@@ -98,32 +89,31 @@ export default function CrearTareas({ users, prioridades }: Props): JSX.Element 
 
   return (
     <div className="mt-6 grid items-center lg:grid-cols-6">
-      <Card className="p-4 animate__fade-in-up lg:col-span-4 lg:col-start-2 ">
+      <Card className="p-4 animate__fade-in-up lg:col-span-4 lg:col-start-2">
         <CardBody>
-          <form
-            className="flex flex-col gap-4"
-            onSubmit={handleSubmit(onSubmit)}
-          >
+          <form className="flex flex-col gap-4" onSubmit={handleSubmit(onSubmit)}>
             <Input
               {...register("titulo", { required: true })}
               fullWidth
               labelPlacement="outside"
               size="md"
               type="text"
-              placeholder="Ingrese el titulo de la tarea"
-              isRequired
-              label="Titulo de la tarea"
-            ></Input>
+              placeholder="Título"
+              label="Título"
+              isInvalid={!!errors.titulo}
+              errorMessage={errors.titulo?.message}
+            />
             <Input
               {...register("descripcion", { required: true })}
-              label="Descripción de la tarea"
               fullWidth
               labelPlacement="outside"
               size="md"
               type="text"
-              placeholder="Ingrese la descripción de la tarea"
-              isRequired
-            ></Input>
+              placeholder="Descripción"
+              label="Descripción"
+              isInvalid={!!errors.descripcion}
+              errorMessage={errors.descripcion?.message}
+            />
             <DateRangePicker
               label="Fecha límite"
               fullWidth
@@ -145,16 +135,14 @@ export default function CrearTareas({ users, prioridades }: Props): JSX.Element 
                 });
               }}
             />
-            <div className="flex flex-col lg:flex-row items-center gap-4 pt-4">
             <Select
               label="Asignar a"
-              placeholder="Seleccione un usuario"
               selectedKeys={selectedUser ? [selectedUser] : []}
               onSelectionChange={(keys) => {
                 const value = Array.from(keys)[0] as string;
                 setSelectedUser(value);
               }}
-              className="w-full"
+              className="max-w-xs"
               isRequired
             >
               {users.map((user) => (
@@ -163,29 +151,25 @@ export default function CrearTareas({ users, prioridades }: Props): JSX.Element 
             </Select>
             <Select
               label="Prioridad"
-              placeholder="Seleccione una prioridad"
               selectedKeys={[selectedPrioridad]}
               onSelectionChange={(keys) => {
                 const value = Array.from(keys)[0] as string;
                 setSelectedPrioridad(value);
               }}
-              className="w-full"
+              className="max-w-xs"
               isRequired
             >
-              {prioridades.map((prio) => (
-                <SelectItem key={prio.id_prioridad}>{prio.nivel}</SelectItem>
+              {prioridades.map((p) => (
+                <SelectItem key={p.id_prioridad}>{p.nivel}</SelectItem>
               ))}
             </Select>
-            </div>
             <Button
               type="submit"
               isLoading={isLoading}
-              isDisabled={
-                isLoading || !isValid || !isValidRange || !selectedUser
-              }
+              isDisabled={!isValid || isLoading || !selectedUser || !isValidRange}
               className="btn btn-primary"
             >
-              Crear Tarea
+              Guardar Cambios
             </Button>
           </form>
         </CardBody>

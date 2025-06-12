@@ -19,10 +19,17 @@ import { toast } from "react-toastify";
 import * as z from "zod";
 
 export const UserSchema = z.object({
-  ced_user: z
-    .string()
-    .min(1, "La cédula es obligatoria")
-    .max(12, "La cédula no debe exceder los 12 caracteres"),
+ced_user: z
+  .string()
+  .min(1, "La cédula es obligatoria")
+  .max(12, "La cédula no debe exceder los 12 caracteres")
+  .refine((val) => {
+    const num = Number(val);
+    return !isNaN(num) && num > 0;
+  }, {
+    message: "no se permiten numeros negativos",
+  }),
+
   nom_user: z
     .string()
     .min(1, "El nombre es obligatorio")

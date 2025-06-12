@@ -61,7 +61,7 @@ export const LoginForm = () => {
       // Redirige a pantalla de carga
       router.push("/loading");
     } catch (err: any) {
-      toast.error(err.message);
+      toast.error("Credenciales incorrectas");
       setIsLoading(false);
     }
   };
@@ -74,7 +74,9 @@ export const LoginForm = () => {
       <CardBody className="flex flex-col gap-4">
         <div className="text-default-500 text-base">
           Ingresa a la plataforma de la{" "}
-          <span className="text-default-600 font-bold">Pizzería San Pietro</span>
+          <span className="text-default-600 font-bold">
+            Pizzería San Pietro
+          </span>
         </div>
         <Divider />
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
