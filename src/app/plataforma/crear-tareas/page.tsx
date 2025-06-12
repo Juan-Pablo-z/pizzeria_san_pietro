@@ -9,7 +9,7 @@ export default async function page() {
   const prioridades = (await getPrioridades()) || [];
   return (
     <div className="main-container">
-      <h1 className="title mb-4">Tomar pedido</h1>
+      <h1 className="title mb-4">Crear Tarea</h1>
       <Divider className="my-4" />
       <CrearTareas users={users} prioridades={prioridades} />
     </div>
