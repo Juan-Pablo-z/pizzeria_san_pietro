@@ -30,19 +30,25 @@ export default function ReportesPage() {
       day: 'numeric',
     } as const;
 
-    const tareasFormateadas = data.map((t: any) => ({
-      ...t,
-      fecha_creacion: t.fecha_creacion
-        ? new Date(t.fecha_creacion)
-            .toLocaleDateString('es-CO', opcionesFecha)
-            .replace(/ de /g, ' ')
-        : '',
-      fecha_limite: t.fecha_limite
-        ? new Date(t.fecha_limite)
-            .toLocaleDateString('es-CO', opcionesFecha)
-            .replace(/ de /g, ' ')
-        : '',
-    }));
+    const hoy = new Date();
+
+    const tareasFormateadas = data.map((t: any) => {
+      const fechaLimite = t.fecha_limite ? new Date(t.fecha_limite) : null;
+      const vencida = fechaLimite ? fechaLimite < hoy : false;
+
+      return {
+        ...t,
+        fecha_creacion: t.fecha_creacion
+          ? new Date(t.fecha_creacion)
+              .toLocaleDateString('es-CO', opcionesFecha)
+              .replace(/ de /g, ' ')
+          : '',
+        fecha_limite: fechaLimite
+          ? fechaLimite.toLocaleDateString('es-CO', opcionesFecha).replace(/ de /g, ' ')
+          : '',
+        vencida,
+      };
+    });
 
     setTareas(tareasFormateadas);
   };
@@ -63,13 +69,8 @@ export default function ReportesPage() {
     setFechaFin('');
     setFiltrarFechas(false);
 
-    // Enfocar input de nombre
     nombreInputRef.current?.focus();
-
-    // Scroll al inicio
     window.scrollTo({ top: 0, behavior: 'smooth' });
-
-    // Mostrar toast
     toast.success('Filtros limpiados correctamente');
   };
 
@@ -105,7 +106,7 @@ export default function ReportesPage() {
             value={fechaFin}
             onChange={(e) => setFechaFin(e.target.value)}
           />
-        </div>      
+        </div>
 
         <Button
           color="primary"
@@ -134,7 +135,18 @@ export default function ReportesPage() {
           { header: 'Estado', accessor: 'estado_tarea' },
           { header: 'Prioridad', accessor: 'prioridad_tarea' },
           { header: 'Creación', accessor: 'fecha_creacion' },
-          { header: 'Límite', accessor: 'fecha_limite' },
+          {
+            header: 'Límite',
+            accessor: 'fecha_limite',
+            template: (t: any) =>
+              t.vencida ? (
+                <span className="text-red-600 font-semibold">
+                  VENCIDA ({t.fecha_limite})
+                </span>
+              ) : (
+                t.fecha_limite
+              ),
+          },
         ]}
         data={tareas}
         emptyMessage="No hay tareas registradas con estos filtros"
