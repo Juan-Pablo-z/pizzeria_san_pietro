@@ -45,6 +45,26 @@ const MENU_ITEMS = [
     href: "/plataforma/reportes",
     roles: [Cargos.ADMIN],
   },
+
+    {
+    icon: "i-mdi-file-chart-outline",
+    name: "Reportes2",
+    href: "/plataforma/reportes2",
+    roles: [Cargos.ADMIN],
+  },
+  /*{
+    icon: "i-mdi-oven",
+    name: "Cocina",
+    href: "/plataforma/cocina",
+    roles: [Cargos.ADMIN, Cargos.COCINERA_JEFE, Cargos.COCINERA],
+  },*/
+  {
+    icon: "i-mdi-clipboard-text-clock-outline",
+    name: "Tareas",
+    href: "/plataforma/pedidos",
+    roles: [Cargos.ADMIN],
+  },
+
   {
     icon: "i-mdi-clipboard-text-clock-outline",
     name: "Tareas",
