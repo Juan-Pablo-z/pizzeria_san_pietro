@@ -8,7 +8,7 @@ import { Button } from "@heroui/react";
 import { Tooltip } from "@heroui/tooltip";
 
 interface CardTareaProps {
-  id: string;
+  id: number;
   title: string;
   content: string;
   name: string;
@@ -84,7 +84,7 @@ export const CardTarea: React.FC<CardTareaProps> = ({
       {...listeners}
       style={style}
       layout
-      layoutId={id}
+      layoutId={id.toString()}
       initial={{ opacity: 0, y: 10, scale: 0.98 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       exit={{ opacity: 0, y: 5, scale: 0.95 }}

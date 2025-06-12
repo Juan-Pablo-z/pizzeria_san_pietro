@@ -1,34 +1,35 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { DndContext, closestCenter } from "@dnd-kit/core";
 import { arrayMove } from "@dnd-kit/sortable";
 import { ColumnaTareas } from "./components/ColumnaTareas";
 import { ModalEditarTarea } from "./components/ModalEditarTarea";
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import { ModalConfirmarEliminacion } from "./components/ModalConfirmarEliminacion";
 import { toast } from "react-toastify";
-import "./css/estilos.css";
 import { Divider } from "@heroui/react";
+import { useSession } from "next-auth/react";
+import { getTareasPorRol } from "@/actions/tareas-actions";
 
-
+import "react-toastify/dist/ReactToastify.css";
+import "./css/estilos.css";
 
 type EstadoTarea = "pendientes" | "enProceso" | "terminadas";
 
-interface Tarea {
-  id: string;
-  title: string;
-  content: string;
-  name: string;
+export interface Tarea {
+  id_tarea: number;
+  titulo: string;
+  descripcion: string;
+  nombre_asignado: string;
+  id_estado: number;
 }
 
 type ColumnasTareas = Record<EstadoTarea, Tarea[]>;
 
-const initialTareas: ColumnasTareas = {
-  pendientes: [{ id: "1", title: "Tarea 1", content: "Contenido de la tarea 1", name:"Juan Fuentes" }],
-  enProceso: [{ id: "2", title: "Tarea 2", content: "Contenido de la tarea 2", name:"Ana Celis" }],
-  terminadas: [{ id: "3", title: "Tarea 3", content: "Contenido de la tarea 3", name:"Sofia Fuentes" }],
+const estadoMapeo: Record<number, EstadoTarea> = {
+  0: "pendientes",
+  1: "enProceso",
+  2: "terminadas",
 };
 
 const claseFondo: Record<EstadoTarea, string> = {
@@ -50,25 +51,60 @@ const claseDivider: Record<EstadoTarea, string> = {
 };
 
 export default function ListaTareasPage() {
-  const [columns, setColumns] = useState<ColumnasTareas>(initialTareas);
+  const { data: session } = useSession();
+  const [columns, setColumns] = useState<ColumnasTareas>({
+    pendientes: [],
+    enProceso: [],
+    terminadas: [],
+  });
+
   const [modalAbierto, setModalAbierto] = useState(false);
+  const [modalEliminarAbierto, setModalEliminarAbierto] = useState(false);
   const [tareaEditando, setTareaEditando] = useState<Tarea | null>(null);
   const [columnaEditando, setColumnaEditando] = useState<EstadoTarea | null>(null);
+  const [tareaAEliminar, setTareaAEliminar] = useState<{ columna: EstadoTarea; id: number } | null>(null);
+
+  useEffect(() => {
+    async function cargarTareas() {
+      if (!session?.user?.ced_user || session?.user?.fkcod_car_user === undefined) return;
+      const tareas = await getTareasPorRol(session.user.ced_user, session.user.fkcod_car_user);
+      console.log("🔍 TAREAS RECIBIDAS:", tareas); 
+      console.log("🧾 Sesión actual:", session?.user);
+      
+      
+      const agrupadas: ColumnasTareas = {
+        pendientes: [],
+        enProceso: [],
+        terminadas: [],
+      };
+
+      tareas.forEach((tarea: any) => {
+        const estado = estadoMapeo[tarea.id_estado];
+        if (estado) agrupadas[estado].push(tarea);
+      });
+
+      console.log(agrupadas);
+
+      setColumns(agrupadas);
+    }
+
+    cargarTareas();
+  }, [session]);
 
   const handleDragEnd = ({ active, over }: any) => {
     if (!over) return;
 
-    const activeId = active.id;
-    const overId = over.id;
+    const activeId = +active.id;
+    const overId = +over.id;
 
     let sourceColumn: EstadoTarea | null = null;
     let targetColumn: EstadoTarea | null = null;
 
     for (const key of Object.keys(columns) as EstadoTarea[]) {
-      if (columns[key].some((t) => t.id === activeId)) {
+      if (columns[key].some((t) => t.id_tarea === activeId)) {
         sourceColumn = key;
       }
-      if (columns[key].some((t) => t.id === overId) || overId === key) {
+      if (columns[key].some((t) => t.id_tarea === overId) || String(overId) === key) {
         targetColumn = key;
       }
     }
@@ -77,62 +113,57 @@ export default function ListaTareasPage() {
 
     if (sourceColumn === targetColumn) {
       const tareas = [...columns[sourceColumn]];
-      const oldIndex = tareas.findIndex((t) => t.id === activeId);
-      const newIndex = tareas.findIndex((t) => t.id === overId);
+      const oldIndex = tareas.findIndex((t) => t.id_tarea === activeId);
+      const newIndex = tareas.findIndex((t) => t.id_tarea === overId);
       const reordered = arrayMove(tareas, oldIndex, newIndex);
-      setColumns((prev) => ({ ...prev, [sourceColumn]: reordered }));
+      setColumns((prev) => ({ ...prev, [sourceColumn!]: reordered }));
     } else {
-      const tareaMovida = columns[sourceColumn].find((t) => t.id === activeId);
+      const tareaMovida = columns[sourceColumn].find((t) => t.id_tarea === activeId);
       if (!tareaMovida) return;
+
       setColumns((prev) => ({
         ...prev,
-        [sourceColumn]: prev[sourceColumn].filter((t) => t.id !== activeId),
+        [sourceColumn]: prev[sourceColumn].filter((t) => t.id_tarea !== activeId),
         [targetColumn]: [...prev[targetColumn], tareaMovida],
       }));
     }
   };
 
-const handleEliminarTarea = (columna: EstadoTarea, tareaId: string) => {
-  setTareaAEliminar({ columna, id: tareaId });
-  setModalEliminarAbierto(true);
-};
+  const handleEliminarTarea = (columna: EstadoTarea, id: number) => {
+    setTareaAEliminar({ columna, id });
+    setModalEliminarAbierto(true);
+  };
 
-const [modalEliminarAbierto, setModalEliminarAbierto] = useState(false);
-const [tareaAEliminar, setTareaAEliminar] = useState<{ columna: EstadoTarea; id: string } | null>(null);
+  const confirmarEliminacion = () => {
+    if (!tareaAEliminar) return;
 
+    const { columna, id } = tareaAEliminar;
 
-  const handleEditarTarea = (columna: EstadoTarea, tareaId: string) => {
-    const tarea = columns[columna].find((t) => t.id === tareaId);
+    setColumns((prev) => ({
+      ...prev,
+      [columna]: prev[columna].filter((t) => t.id_tarea !== id),
+    }));
+
+    setModalEliminarAbierto(false);
+    setTareaAEliminar(null);
+    toast.success("Tarea eliminada correctamente");
+  };
+
+  const handleEditarTarea = (columna: EstadoTarea, id: number) => {
+    const tarea = columns[columna].find((t) => t.id_tarea === id);
     if (!tarea) return;
     setTareaEditando(tarea);
     setColumnaEditando(columna);
     setModalAbierto(true);
   };
 
-  const confirmarEliminacion = () => {
-  if (!tareaAEliminar) return;
-
-  const { columna, id } = tareaAEliminar;
-
-  setColumns((prev) => ({
-    ...prev,
-    [columna]: prev[columna].filter((t) => t.id !== id),
-  }));
-
-  setModalEliminarAbierto(false);
-  setTareaAEliminar(null);
-
-  toast.success("Tarea eliminada correctamente");
-};
-
-
-  const guardarCambiosTarea = (nuevoTitulo: string, nuevoContenido: string) => {
+  const guardarCambiosTarea = (titulo: string, descripcion: string) => {
     if (!tareaEditando || !columnaEditando) return;
 
     setColumns((prev) => ({
       ...prev,
       [columnaEditando]: prev[columnaEditando].map((t) =>
-        t.id === tareaEditando.id ? { ...t, title: nuevoTitulo, content: nuevoContenido } : t
+        t.id_tarea === tareaEditando.id_tarea ? { ...t, titulo, descripcion } : t
       ),
     }));
 
@@ -160,29 +191,26 @@ const [tareaAEliminar, setTareaAEliminar] = useState<{ columna: EstadoTarea; id:
               claseFondo={claseFondo[columnaId]}
               claseAnimacion={claseAnimacion[columnaId]}
               claseDivider={claseDivider[columnaId]}
-              onEdit={(tareaId) => handleEditarTarea(columnaId, tareaId)}
-              onDelete={(tareaId) => handleEliminarTarea(columnaId, tareaId)}
+              onEdit={(id) => handleEditarTarea(columnaId, Number(id))}
+              onDelete={(id) => handleEliminarTarea(columnaId, Number(id))}
             />
           ))}
         </div>
       </DndContext>
 
-
       <ModalConfirmarEliminacion
-  isOpen={modalEliminarAbierto}
-  onClose={() => setModalEliminarAbierto(false)}
-  onConfirm={confirmarEliminacion}
-/>
-
+        isOpen={modalEliminarAbierto}
+        onClose={() => setModalEliminarAbierto(false)}
+        onConfirm={confirmarEliminacion}
+      />
 
       <ModalEditarTarea
         isOpen={modalAbierto}
         onClose={() => setModalAbierto(false)}
         onSave={guardarCambiosTarea}
-        initialTitle={tareaEditando?.title || ""}
-        initialContent={tareaEditando?.content || ""}
+        initialTitle={tareaEditando?.titulo || ""}
+        initialContent={tareaEditando?.descripcion || ""}
       />
     </div>
   );
 }
-
