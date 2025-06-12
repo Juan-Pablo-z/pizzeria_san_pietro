@@ -86,7 +86,7 @@ export default function CrearTareas({ users, prioridades }: Props): JSX.Element 
       setSelectedUser("");
       setSelectedPrioridad("");
       setDateRange({ start: "", end: "" });
-      toast.success("Tarea editada correctamente");
+      toast.success("Tarea creada correctamente");
     } catch (error) {
       toast.error("Error al crear tarea");
       console.error("Error al crear tarea:", error);

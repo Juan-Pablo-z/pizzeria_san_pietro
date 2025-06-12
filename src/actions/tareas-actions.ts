@@ -58,7 +58,7 @@ export async function createTarea(data: {
       id_prioridad,
     } = data;
 
-    // 1. Insertar tarea en la base de datos
+    //  Insertar tarea en la base de datos
     const result = await pool.query(
       `INSERT INTO tareas (titulo, descripcion, fecha_limite, id_asignado, id_creador, id_estado, id_prioridad)
        VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *`,
@@ -67,7 +67,7 @@ export async function createTarea(data: {
 
     const tarea = result.rows[0];
 
-    // 2. Si hay asignado, buscar su correo y enviarle un email
+    //  Si hay asignado, buscar su correo y enviarle un email
     if (id_asignado) {
       const resUser = await pool.query(
         `SELECT nom_user, email_user FROM tmusuarios WHERE ced_user = $1`,

@@ -47,6 +47,22 @@ export const deleteUser = async (ced_emple: string) => {
   }
 };
 
+export const deleteUserAndTasks = async (ced_emple: string) => {
+  const session = await auth();
+  if (!session) return null;
+
+  try {
+    // Elimina tareas primero
+    await pool.query(`DELETE FROM tareas WHERE id_asignado = $1`, [ced_emple]);
+
+    // Luego elimina el usuario
+    await pool.query(`DELETE FROM tmusuarios WHERE ced_user = $1`, [ced_emple]);
+  } catch (error: any) {
+    console.error("❌ Error al eliminar usuario y tareas:", error);
+    throw new Error(error.message);
+  }
+};
+
 
 export const createUser = async (data: {
   ced_user: string;
