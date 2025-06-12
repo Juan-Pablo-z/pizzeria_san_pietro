@@ -154,3 +154,17 @@ export async function getTareasPorRol(userId: string, cargo: number) {
     throw error;
   }
 }
+
+// Cambiar el estado de una tarea
+export async function cambiarEstadoTarea(id_tarea: number, id_estado: number) {
+  try {
+    const result = await pool.query(
+      `UPDATE tareas SET id_estado = $1 WHERE id_tarea = $2 RETURNING *`,
+      [id_estado, id_tarea]
+    );
+    return result.rows[0];
+  } catch (error) {
+    console.error("Error al cambiar el estado de la tarea:", error);
+    throw error;
+  }
+}
