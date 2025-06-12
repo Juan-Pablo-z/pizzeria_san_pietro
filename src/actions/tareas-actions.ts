@@ -41,6 +41,7 @@ export async function getTareas(userId: string) {
 export async function createTarea(data: {
   titulo: string;
   descripcion?: string;
+  fecha_creacion?: string;
   fecha_limite?: string;
   id_asignado?: string;
   id_creador: string;
@@ -51,6 +52,7 @@ export async function createTarea(data: {
     const {
       titulo,
       descripcion,
+      fecha_creacion,
       fecha_limite,
       id_asignado,
       id_creador,
@@ -58,16 +60,32 @@ export async function createTarea(data: {
       id_prioridad,
     } = data;
 
-    // 1. Insertar tarea en la base de datos
     const result = await pool.query(
-      `INSERT INTO tareas (titulo, descripcion, fecha_limite, id_asignado, id_creador, id_estado, id_prioridad)
-       VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *`,
-      [titulo, descripcion || null, fecha_limite || null, id_asignado || null, id_creador, id_estado, id_prioridad]
+      `INSERT INTO tareas (
+         titulo,
+         descripcion,
+         fecha_creacion,
+         fecha_limite,
+         id_asignado,
+         id_creador,
+         id_estado,
+         id_prioridad
+       ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+       RETURNING *`,
+      [
+        titulo,
+        descripcion || null,
+        fecha_creacion || null,
+        fecha_limite || null,
+        id_asignado || null,
+        id_creador,
+        id_estado,
+        id_prioridad,
+      ]
     );
 
     const tarea = result.rows[0];
 
-    // 2. Si hay asignado, buscar su correo y enviarle un email
     if (id_asignado) {
       const resUser = await pool.query(
         `SELECT nom_user, email_user FROM tmusuarios WHERE ced_user = $1`,
@@ -90,7 +108,7 @@ export async function createTarea(data: {
 
     return tarea;
   } catch (error) {
-    console.error(" Error al crear tarea:", error);
+    console.error("Error al crear tarea:", error);
     throw error;
   }
 }

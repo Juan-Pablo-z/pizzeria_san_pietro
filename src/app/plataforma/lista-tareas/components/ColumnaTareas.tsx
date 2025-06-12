@@ -19,6 +19,7 @@ interface Props {
   claseFondo: string;
   claseAnimacion: string;
   claseDivider: string;
+  cargoUsuario: number;
   onEdit: (tareaId: number) => void;
   onDelete: (tareaId: number) => void;
 }
@@ -30,6 +31,7 @@ export const ColumnaTareas = ({
   claseFondo,
   claseAnimacion,
   claseDivider,
+  cargoUsuario,
   onEdit,
   onDelete,
 }: Props) => {
@@ -65,8 +67,11 @@ export const ColumnaTareas = ({
                   key={t.id_tarea}
                   id={t.id_tarea}
                   title={t.titulo}
+                  fecha_creacion={t.fecha_creacion}
+                  fecha_limite={t.fecha_limite}
                   content={t.descripcion}
                   name={t.nombre_asignado}
+                  cargoUsuario={cargoUsuario}
                   onEdit={() => onEdit(t.id_tarea)}
                   onDelete={() => onDelete(t.id_tarea)}
                 />

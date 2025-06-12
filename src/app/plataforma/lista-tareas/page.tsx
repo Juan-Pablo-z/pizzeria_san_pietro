@@ -19,6 +19,8 @@ type EstadoTarea = "pendientes" | "enProceso" | "terminadas";
 export interface Tarea {
   id_tarea: number;
   titulo: string;
+  fecha_creacion: string;
+  fecha_limite: string;
   descripcion: string;
   nombre_asignado: string;
   id_estado: number;
@@ -234,6 +236,7 @@ export default function ListaTareasPage() {
                 claseFondo={claseFondo[columnaId]}
                 claseAnimacion={claseAnimacion[columnaId]}
                 claseDivider={claseDivider[columnaId]}
+                cargoUsuario={session?.user?.fkcod_car_user ?? 0}
                 onEdit={(id) => handleEditarTarea(columnaId, Number(id))}
                 onDelete={(id) => handleEliminarTarea(columnaId, Number(id))}
               />

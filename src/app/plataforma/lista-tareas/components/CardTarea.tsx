@@ -3,15 +3,19 @@ import { useMemo } from "react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { motion } from "framer-motion";
-import { Card, CardHeader, CardBody } from "@heroui/card";
+import { Card, CardHeader, CardBody, CardFooter } from "@heroui/card";
 import { Button } from "@heroui/react";
 import { Tooltip } from "@heroui/tooltip";
+import { Cargos } from "@/enum/cargos.enum";
 
 interface CardTareaProps {
   id: number;
   title: string;
+  fecha_creacion: string;
+  fecha_limite: string;
   content: string;
   name: string;
+  cargoUsuario: number;
   onEdit?: () => void;
   onDelete?: () => void;
 }
@@ -35,6 +39,9 @@ export const CardTarea: React.FC<CardTareaProps> = ({
   id,
   title,
   content,
+  cargoUsuario,
+  fecha_creacion,
+  fecha_limite,
   name,
   onEdit,
   onDelete,
@@ -50,6 +57,8 @@ export const CardTarea: React.FC<CardTareaProps> = ({
     id,
     animateLayoutChanges: () => true,
   });
+
+  const estaVencida = new Date(fecha_limite) < new Date();
 
   const getInitials = (fullName: string) => {
     if (!fullName) return "";
@@ -70,6 +79,15 @@ export const CardTarea: React.FC<CardTareaProps> = ({
     }
     const index = Math.abs(total) % avatarColors.length;
     return avatarColors[index];
+  };
+
+  const formatDate = (dateString: string): string => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString("es-CO", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+    });
   };
 
   const style = {
@@ -94,21 +112,39 @@ export const CardTarea: React.FC<CardTareaProps> = ({
       transition={{ type: "spring", stiffness: 300, damping: 25 }}
       className="relative group"
     >
-      <Card className="w-full shadow-md card-tarea-personalizada">
+      <Card
+        className={`w-full shadow-md card-tarea-personalizada ${
+          estaVencida ? "border-4 border-red-500" : ""
+        }`}
+      >
         <CardHeader className="bg-black text-white px-4 py-2 flex items-center gap-3 rounded-t-lg">
-          <Tooltip content={name}>
-            <div
-              className={`w-8 h-8 ${getAvatarColor(
-                name
-              )} rounded-full flex items-center justify-center text-white font-bold text-sm`}
-            >
-              {getInitials(name)}
-            </div>
-          </Tooltip>
+          {cargoUsuario === Cargos.SUPER_ADMIN ||
+          cargoUsuario === Cargos.ADMIN ? (
+            <Tooltip content={name}>
+              <div
+                className={`w-8 h-8 ${getAvatarColor(
+                  name
+                )} rounded-full flex items-center justify-center text-white font-bold text-sm`}
+              >
+                {getInitials(name)}
+              </div>
+            </Tooltip>
+          ) : null}
           <h2 className="text-lg font-semibold">{title}</h2>
         </CardHeader>
         <CardBody className="flex flex-row justify-between items-center pb-4 pt-4">
-          <span>{content}</span>
+          <div className="flex flex-col gap-2">
+            <span>{content}</span>
+            {estaVencida ? (
+              <span className="hidden group-hover:flex text-xs text-red-500">
+                Vencida
+              </span>
+            ) : (
+              <span className="hidden group-hover:flex text-xs text-gray-500">
+                {formatDate(fecha_creacion)} - {formatDate(fecha_limite)}
+              </span>
+            )}
+          </div>
           {/* Botones flotantes */}
           <div className="hidden group-hover:flex gap-1">
             <Button

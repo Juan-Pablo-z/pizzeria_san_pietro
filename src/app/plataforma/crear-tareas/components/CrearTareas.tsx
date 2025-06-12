@@ -75,6 +75,7 @@ export default function CrearTareas({ users, prioridades }: Props): JSX.Element 
       await createTarea({
         titulo: data.titulo,
         descripcion: data.descripcion,
+        fecha_creacion: dateRange.start,
         fecha_limite: dateRange.end,
         id_asignado: selectedUser,
         id_creador: session.user.ced_user,
@@ -86,7 +87,7 @@ export default function CrearTareas({ users, prioridades }: Props): JSX.Element 
       setSelectedUser("");
       setSelectedPrioridad("");
       setDateRange({ start: "", end: "" });
-      toast.success("Tarea editada correctamente");
+      toast.success("Tarea creada correctamente");
     } catch (error) {
       toast.error("Error al crear tarea");
       console.error("Error al crear tarea:", error);
@@ -144,6 +145,7 @@ export default function CrearTareas({ users, prioridades }: Props): JSX.Element 
                 });
               }}
             />
+            <div className="flex flex-col lg:flex-row items-center gap-4 pt-4">
             <Select
               label="Asignar a"
               placeholder="Seleccione un usuario"
@@ -152,7 +154,7 @@ export default function CrearTareas({ users, prioridades }: Props): JSX.Element 
                 const value = Array.from(keys)[0] as string;
                 setSelectedUser(value);
               }}
-              className="max-w-xs"
+              className="w-full"
               isRequired
             >
               {users.map((user) => (
@@ -167,13 +169,14 @@ export default function CrearTareas({ users, prioridades }: Props): JSX.Element 
                 const value = Array.from(keys)[0] as string;
                 setSelectedPrioridad(value);
               }}
-              className="max-w-xs"
+              className="w-full"
               isRequired
             >
               {prioridades.map((prio) => (
                 <SelectItem key={prio.id_prioridad}>{prio.nivel}</SelectItem>
               ))}
             </Select>
+            </div>
             <Button
               type="submit"
               isLoading={isLoading}
