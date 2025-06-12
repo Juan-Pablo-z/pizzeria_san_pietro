@@ -4,12 +4,12 @@ import { useEffect, useState } from "react";
 import { DndContext, closestCenter } from "@dnd-kit/core";
 import { arrayMove } from "@dnd-kit/sortable";
 import { ColumnaTareas } from "./components/ColumnaTareas";
-import { ModalEditarTarea } from "./components/ModalEditarTarea";
 import { ModalConfirmarEliminacion } from "./components/ModalConfirmarEliminacion";
 import { toast } from "react-toastify";
 import { Divider } from "@heroui/react";
 import { useSession } from "next-auth/react";
 import { getTareasPorRol, cambiarEstadoTarea } from "@/actions/tareas-actions";
+import { useRouter } from "next/navigation";
 
 import "react-toastify/dist/ReactToastify.css";
 import "./css/estilos.css";
@@ -33,6 +33,7 @@ const estadoMapeo: Record<number, EstadoTarea> = {
   1: "enProceso",
   2: "terminadas",
 };
+
 const estadoMapeoInverso: Record<EstadoTarea, number> = {
   pendientes: 0,
   enProceso: 1,
@@ -59,18 +60,20 @@ const claseDivider: Record<EstadoTarea, string> = {
 
 export default function ListaTareasPage() {
   const { data: session } = useSession();
+  const router = useRouter();
+
   const [columns, setColumns] = useState<ColumnasTareas>({
     pendientes: [],
     enProceso: [],
     terminadas: [],
   });
-  const [isLoading, setIsLoading] = useState(true);
 
-  const [modalAbierto, setModalAbierto] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [modalEliminarAbierto, setModalEliminarAbierto] = useState(false);
-  const [tareaEditando, setTareaEditando] = useState<Tarea | null>(null);
-  const [columnaEditando, setColumnaEditando] = useState<EstadoTarea | null>(null);
-  const [tareaAEliminar, setTareaAEliminar] = useState<{ columna: EstadoTarea; id: number } | null>(null);
+  const [tareaAEliminar, setTareaAEliminar] = useState<{
+    columna: EstadoTarea;
+    id: number;
+  } | null>(null);
 
   useEffect(() => {
     async function cargarTareas() {
@@ -79,11 +82,11 @@ export default function ListaTareasPage() {
         return;
       }
       setIsLoading(true);
-      const tareas = await getTareasPorRol(session.user.ced_user, session.user.fkcod_car_user);
-      console.log("🔍 TAREAS RECIBIDAS:", tareas); 
-      console.log("🧾 Sesión actual:", session?.user);
-      
-      
+      const tareas = await getTareasPorRol(
+        session.user.ced_user,
+        session.user.fkcod_car_user
+      );
+
       const agrupadas: ColumnasTareas = {
         pendientes: [],
         enProceso: [],
@@ -94,8 +97,6 @@ export default function ListaTareasPage() {
         const estado = estadoMapeo[tarea.id_estado];
         if (estado) agrupadas[estado].push(tarea);
       });
-
-      console.log(agrupadas);
 
       setColumns(agrupadas);
       setIsLoading(false);
@@ -111,7 +112,6 @@ export default function ListaTareasPage() {
     let sourceColumn: EstadoTarea | null = null;
     let targetColumn: EstadoTarea | null = null;
 
-    // Buscar columna origen
     for (const key of Object.keys(columns) as EstadoTarea[]) {
       if (columns[key].some((t) => t.id_tarea === activeId)) {
         sourceColumn = key;
@@ -119,7 +119,6 @@ export default function ListaTareasPage() {
       }
     }
 
-    // Determinar columna destino
     if (["pendientes", "enProceso", "terminadas"].includes(over.id)) {
       targetColumn = over.id as EstadoTarea;
     } else {
@@ -133,37 +132,34 @@ export default function ListaTareasPage() {
 
     if (!sourceColumn || !targetColumn) return;
 
-    // Si es la misma columna, reordenar
     if (sourceColumn === targetColumn) {
       const tareas = [...columns[sourceColumn]];
       const oldIndex = tareas.findIndex((t) => t.id_tarea === activeId);
       let newIndex = tareas.findIndex((t) => t.id_tarea === +over.id);
-      // Si soltó en el área vacía de la columna, poner al final
       if (["pendientes", "enProceso", "terminadas"].includes(over.id)) {
         newIndex = tareas.length - 1;
       }
       if (oldIndex !== -1 && newIndex !== -1 && oldIndex !== newIndex) {
         const reordered = arrayMove(tareas, oldIndex, newIndex);
-        setColumns((prev) => ({ ...prev, [sourceColumn!]: reordered }));
+        setColumns((prev) => ({ ...prev, [sourceColumn]: reordered }));
       }
     } else {
-      // Mover entre columnas y actualizar en BD
       const tareaMovida = columns[sourceColumn].find((t) => t.id_tarea === activeId);
       if (!tareaMovida) return;
 
-      // Actualiza visualmente primero (optimista)
       setColumns((prev) => ({
         ...prev,
         [sourceColumn]: prev[sourceColumn].filter((t) => t.id_tarea !== activeId),
-        [targetColumn]: [...prev[targetColumn], { ...tareaMovida, id_estado: estadoMapeoInverso[targetColumn] }],
+        [targetColumn]: [
+          ...prev[targetColumn],
+          { ...tareaMovida, id_estado: estadoMapeoInverso[targetColumn] },
+        ],
       }));
 
-      // Actualiza en la base de datos
       try {
         await cambiarEstadoTarea(activeId, estadoMapeoInverso[targetColumn]);
       } catch (error) {
         toast.error("Error al cambiar el estado de la tarea");
-        // Si falla, podrías recargar o revertir el cambio visual si lo deseas
       }
     }
   };
@@ -188,27 +184,8 @@ export default function ListaTareasPage() {
     toast.success("Tarea eliminada correctamente");
   };
 
-  const handleEditarTarea = (columna: EstadoTarea, id: number) => {
-    const tarea = columns[columna].find((t) => t.id_tarea === id);
-    if (!tarea) return;
-    setTareaEditando(tarea);
-    setColumnaEditando(columna);
-    setModalAbierto(true);
-  };
-
-  const guardarCambiosTarea = (titulo: string, descripcion: string) => {
-    if (!tareaEditando || !columnaEditando) return;
-
-    setColumns((prev) => ({
-      ...prev,
-      [columnaEditando]: prev[columnaEditando].map((t) =>
-        t.id_tarea === tareaEditando.id_tarea ? { ...t, titulo, descripcion } : t
-      ),
-    }));
-
-    setModalAbierto(false);
-    setTareaEditando(null);
-    setColumnaEditando(null);
+  const handleEditarTarea = (_columna: EstadoTarea, id: number) => {
+    router.push(`/plataforma/editar-tarea/${id}`);
   };
 
   return (
@@ -249,14 +226,6 @@ export default function ListaTareasPage() {
         isOpen={modalEliminarAbierto}
         onClose={() => setModalEliminarAbierto(false)}
         onConfirm={confirmarEliminacion}
-      />
-
-      <ModalEditarTarea
-        isOpen={modalAbierto}
-        onClose={() => setModalAbierto(false)}
-        onSave={guardarCambiosTarea}
-        initialTitle={tareaEditando?.titulo || ""}
-        initialContent={tareaEditando?.descripcion || ""}
       />
     </div>
   );
