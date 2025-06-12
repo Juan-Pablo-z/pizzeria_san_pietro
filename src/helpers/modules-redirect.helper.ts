@@ -5,10 +5,10 @@ export const modulesRedirectHelper = (cod_car_user: Cargos) => {
     return "/plataforma/dashboard";
   }
   if ([Cargos.COCINERA, Cargos.COCINERA_JEFE].includes(cod_car_user)) {
-    return "/plataforma/cocina";
+    return "/plataforma/lista-tareas";
   }
   if ([Cargos.MESERA].includes(cod_car_user)) {
-    return "/plataforma/tomar-pedido";
+    return "/plataforma/lista-tareas";
   }
   return null;
 };

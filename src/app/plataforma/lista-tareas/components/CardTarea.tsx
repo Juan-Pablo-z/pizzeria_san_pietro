@@ -52,6 +52,7 @@ export const CardTarea: React.FC<CardTareaProps> = ({
   });
 
   const getInitials = (fullName: string) => {
+    if (!fullName) return "";
     return fullName
       .split(" ")
       .map((word) => word[0])
@@ -61,12 +62,12 @@ export const CardTarea: React.FC<CardTareaProps> = ({
 
   // Genera un color consistente basado en el nombre
   const getAvatarColor = (name: string) => {
+    if (!name) return avatarColors[0]; // o cualquier color por defecto
+
     let total = 0;
-    // Crea un número total  a partir del nombre
     for (let i = 0; i < name.length; i++) {
       total = name.charCodeAt(i) + ((total << 5) - total);
     }
-    // Selecciona un color usando el total
     const index = Math.abs(total) % avatarColors.length;
     return avatarColors[index];
   };
@@ -107,7 +108,7 @@ export const CardTarea: React.FC<CardTareaProps> = ({
           <h2 className="text-lg font-semibold">{title}</h2>
         </CardHeader>
         <CardBody className="flex flex-row justify-between items-center pb-4 pt-4">
-          <span >{content}</span>
+          <span>{content}</span>
           {/* Botones flotantes */}
           <div className="hidden group-hover:flex gap-1">
             <Button
