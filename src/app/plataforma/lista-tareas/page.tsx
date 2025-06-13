@@ -10,6 +10,8 @@ import { Divider } from "@heroui/react";
 import { useSession } from "next-auth/react";
 import { getTareasPorRol, cambiarEstadoTarea } from "@/actions/tareas-actions";
 import { useRouter } from "next/navigation";
+import { deleteTarea } from '@/actions/tareas-actions';
+
 
 import "react-toastify/dist/ReactToastify.css";
 import "./css/estilos.css";
@@ -169,20 +171,29 @@ export default function ListaTareasPage() {
     setModalEliminarAbierto(true);
   };
 
-  const confirmarEliminacion = () => {
-    if (!tareaAEliminar) return;
+const confirmarEliminacion = async () => {
+  if (!tareaAEliminar) return;
 
-    const { columna, id } = tareaAEliminar;
+  const { columna, id } = tareaAEliminar;
+
+  try {
+    await deleteTarea(id); // Elimina de la base de datos
 
     setColumns((prev) => ({
       ...prev,
       [columna]: prev[columna].filter((t) => t.id_tarea !== id),
     }));
 
+    toast.success("Tarea eliminada correctamente");
+  } catch (error) {
+    toast.error("Error al eliminar la tarea de la base de datos");
+    console.error("Error al eliminar:", error);
+  } finally {
     setModalEliminarAbierto(false);
     setTareaAEliminar(null);
-    toast.success("Tarea eliminada correctamente");
-  };
+  }
+};
+
 
   const handleEditarTarea = (_columna: EstadoTarea, id: number) => {
     router.push(`/plataforma/editar-tarea/${id}`);
