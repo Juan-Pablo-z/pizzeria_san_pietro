@@ -1,16 +1,10 @@
 "use client";
-import { OrdenPendiente } from "@/interfaces";
-import { pusherClient } from "@/lib/pusher";
 import { Session } from "next-auth";
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useContext } from "react";
 
-interface WebSocketContextProps {
-  orderList: OrdenPendiente[];
-}
+interface WebSocketContextProps {}
 
-const WebSocketContext = createContext<WebSocketContextProps>({
-  orderList: [],
-});
+const WebSocketContext = createContext<WebSocketContextProps>({});
 
 export const useWebSocket = () => {
   return useContext(WebSocketContext);
@@ -23,10 +17,8 @@ export const WebSocketProvider = ({
   children: React.ReactNode;
   session: Session;
 }) => {
-  const [orderList, setOrderList] = useState<any[]>([]);
-
   return (
-    <WebSocketContext.Provider value={{ orderList }}>
+    <WebSocketContext.Provider value={{}}>
       {children}
     </WebSocketContext.Provider>
   );

@@ -10,7 +10,7 @@ const [showLoader, setShowLoader] = useState(true);
 useEffect(() => {
     const timeout = setTimeout(() => {
     setShowLoader(false);
-    }, 8000); // puedes ajustar el tiempo
+    }, 8000);
 
     return () => clearTimeout(timeout);
 }, []);

@@ -23,24 +23,6 @@ export const loginEmail = async (data: { password: string; email: string }) => {
   try {
     await pool.connect();
 
-    // const res = await pool.query(`
-    //   SELECT
-    //     u.ced_user,
-    //     u.nom_user,
-    //     u.email_user,
-    //     u.fkcod_car_user,
-    //     c.dcar
-    //   FROM tmusuarios AS u
-    //   JOIN tmcargos AS c
-    //     ON u.fkcod_car_user = c.cod_car
-    //   WHERE
-    //     u.fkcods_user != 0 AND
-    //     email_user = $1 AND
-    //     password_user = $2
-    //   `,
-    //   [data.email, data.password]
-    // );
-
     const res = await pool.query(
       `
       SELECT 

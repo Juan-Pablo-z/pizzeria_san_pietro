@@ -1,5 +1,4 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { formatMoney, getImage } from "@/helpers";
 import {
   cn,
   Pagination,
@@ -11,7 +10,6 @@ import {
   TableProps,
   TableRow,
 } from "@nextui-org/react";
-import Image from "next/image";
 import React, { Key, useMemo } from "react";
 
 export interface Column {
@@ -52,25 +50,11 @@ export const CustomTable: React.FC<Props> = ({
   const renderRow = (item: any, columnKey: Key) => {
     const column = columns.find((c) => c.accessor === columnKey);
     if (!column) return null;
-    return (
-      <div key={column.accessor}>
-        {column.template ? (
-          column.template(item)
-        ) : column.type === "icon" ? (
-          <Image
-            width={32}
-            height={32}
-            src={getImage(item[column.accessor])}
-            alt={item.nom_prod}
-            className="rounded-md object-cover object-center w-8 h-8"
-          />
-        ) : column.type === "price" ? (
-          <div className="text-end">{formatMoney(item[column.accessor])}</div>
-        ) : (
-          item[column.accessor]
-        )}
-      </div>
-    );
+    if (column.template) {
+      return <div key={column.accessor}>{column.template(item)}</div>;
+    }
+    // Solo retorna el valor simple, sin lógica de imagen ni precio
+    return item[column.accessor];
   };
 
   const items = useMemo(() => {
@@ -90,22 +74,10 @@ export const CustomTable: React.FC<Props> = ({
             <TableColumn
               align={column.align}
               className="bg-dark text-white"
-              width={
-                column.width
-                  ? column.width
-                  : column.type === "icon"
-                  ? 56
-                  : undefined
-              }
+              width={column.width}
               key={column.accessor}
             >
-              {column.type === "icon" ? (
-                <div className="grid place-content-center">
-                  <i className={cn("", column.header)} />
-                </div>
-              ) : (
-                column.header
-              )}
+              {column.header}
             </TableColumn>
           )}
         </TableHeader>
