@@ -11,7 +11,7 @@ export async function enviarCorreoRecuperacion(destinatario: string, nombre: str
       <div style="font-family: Arial, sans-serif; background-color: #f9f9f9; padding: 30px;">
         <div style="max-width: 600px; margin: auto; background-color: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
           <div style="padding: 20px; text-align: center; background-color: #182e1e;">
-            <img src="https://pizzeriasanpietro1.vercel.app/images/san_pietro_logo.png" alt="San Pietro Logo" style="width: 120px; height: 120px; margin-bottom: 10px; border-radius: 9999px;" />
+            <img src="http://localhost:3000/images/san_pietro_logo.png" alt="San Pietro Logo" style="width: 120px; height: 120px; margin-bottom: 10px; border-radius: 9999px;" />
           </div>
           <div style="padding: 30px;">
             <h2 style="color: #111827;">Hola ${nombre},</h2>
