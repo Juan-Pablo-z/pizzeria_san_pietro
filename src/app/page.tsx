@@ -196,7 +196,7 @@ export default async function Home() {
       </footer>
       <div className="copyright">
         <div className="p-section text-white">
-          Copyright © 2025 - Todos los derechos reservados
+          Copyright © 2025 - Desarrollado por Aprendices Sena - Todos los derechos reservados
         </div>
       </div>
     </>
